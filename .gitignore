@@ -1,0 +1,45 @@
+/venv
+/others
+**/__pycache__
+*.pyc
+logs/
+!logs/.git-empty
+db.sqlite3
+/media
+/public
+# Translations
+*.mo
+
+# Scrapy stuff:
+.scrapy
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# End of https://www.gitignore.io/api/django
