@@ -1,8 +1,10 @@
 from django.contrib import admin
 from .models import List, Profile, Proxy, TaskAdaptor
 
-admin.site.site_title = 'HotmailBot v0.1.0'
-admin.site.site_header = 'HotmailBot v0.1.0'
+APP_NAME = 'Universal Bot'
+
+admin.site.site_title = f'{APP_NAME} v0.1.0'
+admin.site.site_header = f'{APP_NAME} v0.1.0'
 admin.site.index_title = 'Dashboard'
 
 
@@ -49,7 +51,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists')
 	# task name, task params, task hash
 
-	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created')
+	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed', 'task', 'completed_task')
 	list_display_links = ('task_name',)
 	list_filter = ('created', 'repeat')
 	search_fields = ('id', 'task_name')
@@ -58,6 +60,10 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 		return f'{obj.lists.count()} list(s)'
 	count_lists.short_description = 'Lists'
 
+	def is_completed(self, obj):
+		return bool(not obj.task and obj.completed_task)
+	is_completed.boolean = True
+	is_completed.short_description = 'Completed'
 
 # @admin.register(Task)
 # class TaskAdmin(admin.ModelAdmin):

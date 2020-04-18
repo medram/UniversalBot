@@ -1,3 +1,5 @@
+from background_task import background
 
-def run_lists(lists):
-	print(f'> run_lists is fired ({lists})')
+@background
+def run_lists(task_id):
+	print(f'> run_lists is fired ({task_id})')

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from django.db import transaction
 
-from background_task.models import Task
+from background_task.models import Task, CompletedTask
 
 from . import common
 
@@ -91,7 +91,9 @@ class TaskAdaptor(models.Model):
 	repeat_until = Task._meta.get_field('repeat_until')
 
 	lists = models.ManyToManyField('List')
-	task = models.OneToOneField(Task, null=True, blank=True, on_delete=models.CASCADE)
+	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)
+	completed_task = models.OneToOneField(CompletedTask, null=True, blank=True, default=None, on_delete=models.SET_NULL)
+	
 	updated = models.DateTimeField(auto_now=True)
 	created = models.DateTimeField(auto_now_add=True)
 
