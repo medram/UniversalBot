@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import List, Profile, Proxy, TaskAdaptor
+from .models import List, Profile, Proxy, TaskAdaptor, Server
 
 APP_NAME = 'Universal Bot'
 
@@ -47,11 +47,10 @@ class ProxyAdmin(admin.ModelAdmin):
 
 @admin.register(TaskAdaptor)
 class TaskAdaptorAdmin(admin.ModelAdmin):
-	filter_horizontal = ('lists',)
-	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists')
-	# task name, task params, task hash
+	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists', 'servers')
+	filter_horizontal = ('lists', 'servers')
 
-	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed', 'task', 'completed_task')
+	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed')
 	list_display_links = ('task_name',)
 	list_filter = ('created', 'repeat')
 	search_fields = ('id', 'task_name')
@@ -65,17 +64,8 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	is_completed.boolean = True
 	is_completed.short_description = 'Completed'
 
-# @admin.register(Task)
-# class TaskAdmin(admin.ModelAdmin):
-# 	list_display = ('id', 'name', 'count_lists', 'start', 'status', 'created')
-# 	list_display_links = ('id', 'name')
-# 	list_editable = ('status',)
-# 	list_per_page = 25
 
-# 	list_filter = ('created', 'status')
-# 	search_fields = ('id', 'name')
-# 	filter_horizontal = ('lists',)
 
-# 	def count_lists(self, obj):
-# 		return f'{obj.lists.count()} list(s)'
-# 	count_lists.short_description = 'Affected Lists'
+@admin.register(Server)
+class ServerAdmin(admin.ModelAdmin):
+	pass

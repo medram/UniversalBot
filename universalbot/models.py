@@ -93,7 +93,8 @@ class TaskAdaptor(models.Model):
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)
 	completed_task = models.OneToOneField(CompletedTask, null=True, blank=True, default=None, on_delete=models.SET_NULL)
-	
+	servers = models.ManyToManyField('Server')
+
 	updated = models.DateTimeField(auto_now=True)
 	created = models.DateTimeField(auto_now_add=True)
 
@@ -102,28 +103,22 @@ class TaskAdaptor(models.Model):
 		verbose_name = 'Task'
 		verbose_name_plural = 'Tasks'
 
-	# def save(self, *args, **kwargs):
-	# 	super().__init__(*args, **kwargs)
 
-
-
-
-
-# class Task(models.Model):
-# 	class Status(models.IntegerChoices):
-# 		ACTIVE 		= (1, 'Active')
-# 		INACTIVE 	= (2, 'Inactive')
-# 		ABORTED 	= (3, 'Aborted')
-# 		COMPLETED 	= (4, 'Completed')
-
-# 	name = models.CharField(max_length=42, unique=True)
-# 	start = models.DateTimeField()
-# 	status = models.IntegerField(choices=Status.choices, default=Status.INACTIVE)
-
-# 	lists = models.ManyToManyField('List')
-
-# 	updated = models.DateTimeField(auto_now=True)
-# 	created = models.DateTimeField(auto_now_add=True)
+# class Task_server(models.Model):
+# 	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)
+# 	server = models.ForeignKey('Server', on_delete=models.CASCADE)
 
 # 	def __str__(self):
-# 		return self.name
+# 		return f'{self.task} - {self.server}'
+
+
+class Server(models.Model):
+	ip = models.GenericIPAddressField(verbose_name='IP Address')
+	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
+
+	class Meta:
+		db_table = 'servers'
+
+	def __str__(self):
+		return f'{self.ip}:{self.port}'
