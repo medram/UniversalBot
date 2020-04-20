@@ -56,7 +56,7 @@ def create_task(sender, instance, created, **kwargs):
 # Update the task automatically
 @receiver(post_save, sender=TaskAdaptor)
 def save_task(sender, instance, created, **kwargs):
-	if not created:
+	if not created and instance.task:
 		instance.task.run_at = instance.run_at
 		instance.task.verbose_name = instance.task_name
 		instance.task.repeat = instance.repeat
@@ -65,18 +65,18 @@ def save_task(sender, instance, created, **kwargs):
 
 
 # Update task_adapter when task is renewed
-@receiver(task_rescheduled, sender=Task)
-def rescheduled_task(sender, instance, **kwargs):
-	print('>> task_rescheduled')
-	try:
-		task_adaptor = TaskAdaptor.objects.get(task_name=instance.verbose_name)
-		print('>> instance:', instance.pk)
-		print('>> task_adaptor.task:', task_adaptor.task)
-		if not task_adaptor.task:
-			task_adaptor.task = instance
-			task_adaptor.save()
-	except TaskAdaptor.DoesNotExist:
-		pass
+# @receiver(task_rescheduled, sender=Task)
+# def rescheduled_task(sender, **kwargs):
+# 	print('>> task_rescheduled')
+	# try:
+	# 	task_adaptor = TaskAdaptor.objects.get(task_name=instance.verbose_name)
+	# 	print('>> instance:', instance.pk)
+	# 	print('>> task_adaptor.task:', task_adaptor.task)
+	# 	if not task_adaptor.task:
+	# 		task_adaptor.task = instance
+	# 		task_adaptor.save()
+	# except TaskAdaptor.DoesNotExist:
+	# 	pass
 
 # Delete the task automatically
 @receiver(post_delete, sender=TaskAdaptor)
@@ -90,12 +90,30 @@ def delete_task(sender, instance, **kwargs):
 		pass
 
 
-# append task to a taskAdapter
+# append Task to a taskAdapter
+@receiver(post_save, sender=Task)
+def update_taskadaptor(sender, instance, created, **kwargs):
+	# print('> update_taskadaptor')
+	if created:
+		# print('> do something at creation.')
+		TaskAdaptor.objects.filter(task_name=instance.verbose_name).update(task=instance)
+
+	# print('> do something at update.')
+	TaskAdaptor.objects.filter(task_name=instance.verbose_name).update(
+			run_at = instance.run_at,
+			repeat = instance.repeat,
+			repeat_until = instance.repeat_until
+		)
+
+
+
+# append CompletedTask to a taskAdapter
 @receiver(post_save, sender=CompletedTask)
-def update_task_adaptor(sender, instance, **kwargs):
-	try:
-		task_adaptor = TaskAdaptor.objects.get(task_name=instance.verbose_name)
-		task_adaptor.completed_task = instance
-		task_adaptor.save()
-	except TaskAdaptor.DoesNotExist:
-		pass
+def update_taskadaptor2(sender, instance, created, **kwargs):
+	if created:
+		try:
+			task_adaptor = TaskAdaptor.objects.get(task_name=instance.verbose_name)
+			task_adaptor.completed_task = instance
+			task_adaptor.save()
+		except TaskAdaptor.DoesNotExist:
+			pass

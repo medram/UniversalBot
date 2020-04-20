@@ -131,7 +131,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Django background tasks settings
-MAX_ATTEMPTS                        = 1
+# MAX_ATTEMPTS                        = 1
 # MAX_RUN_TIME                        = 3600      # default 3600 seconds
 # BACKGROUND_TASK_RUN_ASYNC           = False      # True/False
 # BACKGROUND_TASK_PRIORITY_ORDERING   = 'DESC'    # ASC/DESC
