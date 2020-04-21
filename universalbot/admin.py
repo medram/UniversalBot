@@ -26,10 +26,12 @@ class ListAdmin(admin.ModelAdmin):
 	list_per_page = 25
 	list_filter = ('actions', 'created')
 	search_fields = ('id', 'name')
+	date_hierarchy = 'created'
 
 	# at adding or editting
 	fields = ('name', 'file', 'profiles', 'actions')	
 	filter_horizontal = ('profiles',)
+
 
 	def count_profiles(self, obj):
 		return f'{obj.profiles.count()} profile(s)'
@@ -52,6 +54,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 
 	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed')
 	list_display_links = ('task_name',)
+	list_per_page = 25
 	list_filter = ('created', 'repeat')
 	search_fields = ('id', 'task_name')
 
@@ -68,4 +71,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-	pass
+	list_display = ('ip', 'port', 'active')
+	list_per_page = 25
+	search_fields = ('ip', 'port')
+	list_filter = ('active',)

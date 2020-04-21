@@ -6,4 +6,4 @@ class UniversalbotConfig(AppConfig):
     verbose_name = 'Universal Bot'
 
     def ready(self):
-    	from . import signals
+    	from . import signals, tasks_signals
