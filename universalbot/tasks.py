@@ -6,4 +6,7 @@ from .models import TaskAdaptor
 def run_lists(task_id):
 	task_started.send(TaskAdaptor, tasks_ids=task_id)
 	print(f'> run_lists is fired ({task_id})')
+
 	task_finished.send(TaskAdaptor, tasks_ids=task_id)
+
+
