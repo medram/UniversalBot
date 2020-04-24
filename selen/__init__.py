@@ -3,20 +3,22 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from universalbot.models import List
 
 from . import actions, exceptions
+from .ISP import Hotmail
 
 l = List.objects.get(pk=1)
 profiles = l.profiles.all()
 
-server_url = 'http://127.0.0.1:4444/wd/hub'
 
 for profile in profiles:
 	try:
-		actions.CreateProfile(profile)
+		isp = Hotmail(profile)
+		isp.login()
+		isp.do_actions()
 
 	except exceptions.EmptyInbox:
 		print('Empty Inbox')
-	except Exception as e:
-		print(e)
+	# except Exception as e:
+	# 	print(e)
 	else:
 		print('Done')
 

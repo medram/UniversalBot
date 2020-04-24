@@ -10,7 +10,6 @@ from selenium.webdriver.support.events import EventFiringWebDriver, AbstractEven
 
 from selen import exceptions
 
-
 # automatic login
 def automaticLogin(driver, profile):
 	if driver.current_url.startswith('https://login.live.com'):
@@ -67,3 +66,7 @@ def CreateProfile(profile):
 
 	# # automatic login (CantLogin exception)
 	# automaticLogin(driver, profile)
+
+
+
+
