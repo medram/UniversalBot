@@ -20,7 +20,7 @@ class AbstractISP(ABC):
 		   			desired_capabilities=DesiredCapabilities.FIREFOX.copy()
 		   		)
 
-		driver = EventFiringWebDriver(driver, MyListeners())
+		# driver = EventFiringWebDriver(driver, MyListeners())
 		driver.implicitly_wait(10)
 		return driver
 

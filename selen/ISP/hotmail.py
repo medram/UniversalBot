@@ -1,6 +1,7 @@
 import time
 import json
 import os
+import pickle
 
 from django.conf import settings
 from json.decoder import JSONDecodeError
@@ -10,7 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
 		NoSuchElementException,
-		ElementClickInterceptedException
+		ElementClickInterceptedException,
+		InvalidCookieDomainException
 	)
 
 
@@ -24,11 +26,19 @@ class Hotmail(AbstractISP):
 		# check the login status.
 		# try to login if we are not.
 		# create profile if the account is new.
+		# self.driver.get('https://google.com')
+		self.driver.get('https://outlook.live.com/owa/')
+		time.sleep(1)
+		self.driver.delete_all_cookies()
 		self._load_cookies()
-		self._automatic_login()
-		self._save_cookies()
+		time.sleep(3)
+		self.driver.get('https://outlook.live.com/mail/0/')
+		# self.driver.get('https://account.microsoft.com/?lang=en-US')
+		
+		# self._automatic_login()
+		# self.driver.get('https://outlook.live.com/')
+		# self._save_cookies()
 
-		self.driver.get('https://outlook.live.com/mail/0/inbox')
 
 	def do_actions(self):
 		pass
@@ -37,20 +47,31 @@ class Hotmail(AbstractISP):
 		print('creating profile.')
 
 	def _load_cookies(self):
+		# self.driver.get('https://google.com')
 		try:
-			with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.json')) as f:
+			with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl'), 'r') as f:
+				# cookies = pickle.load(f)
 				cookies = json.load(f)
-				for i, cookie in enumerate(cookies):
-					print('>', i)
-					print(cookie)
-					self.driver.add_cookie(cookie)
+				for cookie in cookies:
+					try:
+						self.driver.add_cookie(cookie)
+					except InvalidCookieDomainException as e:
+						print(e)
+					else:
+						print(f">> cookie {cookie['domain']} is loaded")
 				print('Cookies is loaded.')
 		except (FileNotFoundError, JSONDecodeError):
 			pass
 
 
 	def _save_cookies(self):
-		with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.json'), 'w') as f:
+		time.sleep(5)
+		print('_save_cookies')
+		with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl'), 'w') as f:
+			for c in self.driver.get_cookies():
+				print(c['domain'])
+
+			# pickle.dump(self.driver.get_cookies(), f)
 			json.dump(self.driver.get_cookies(), f, indent=2)
 			print('Cookies is saved.')
 
