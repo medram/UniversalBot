@@ -1,7 +1,7 @@
 import time
 import json
 import os
-import pickle
+# import pickle
 
 from django.conf import settings
 from json.decoder import JSONDecodeError
@@ -12,44 +12,55 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
 		NoSuchElementException,
 		ElementClickInterceptedException,
-		InvalidCookieDomainException
+		InvalidCookieDomainException,
+		StaleElementReferenceException
 	)
 
 
-from .abstract import AbstractISP
-from .. import exceptions
+from selen.abstract import AbstractISP, ActionAbstract
+from selen import exceptions
+from universalbot.models import Actions
+from .actions import Inbox_add_all_to_archive
+
 
 class Hotmail(AbstractISP):
 
+	def do_actions(self):
+		if self.loggedin:
+			print('do_action')
+			print(self.actions)
+			for action in self.list.actions: # action is a str number
+				try:
+					ActionObject = self.actions[action]
+					if isinstance(ActionObject, ActionAbstract):
+						print('Apply action ', action)
+						ActionObject.apply()
+				except KeyError:
+					pass
+
+	def register_actions(self):
+		print('register actions')
+		self.actions[Actions.INBOX_ADD_ALL_TO_ARCHIVE] = Inbox_add_all_to_archive(self)
+
+
 	def login(self):
 		print('Login')
-		# check the login status.
-		# try to login if we are not.
-		# create profile if the account is new.
-		# self.driver.get('https://google.com')
-		self.driver.get('https://outlook.live.com/owa/')
-		time.sleep(1)
-		self.driver.delete_all_cookies()
-		self._load_cookies()
-		time.sleep(3)
-		self.driver.get('https://outlook.live.com/mail/0/')
-		# self.driver.get('https://account.microsoft.com/?lang=en-US')
-		
-		# self._automatic_login()
-		# self.driver.get('https://outlook.live.com/')
-		# self._save_cookies()
+		self._automatic_login()
 
 
-	def do_actions(self):
+	def logout(self):
 		pass
+
 
 	def create_profile(self):
 		print('creating profile.')
 
+
 	def _load_cookies(self):
 		# self.driver.get('https://google.com')
 		try:
-			with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl'), 'r') as f:
+			cookie_path = os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl')
+			with open(cookie_path, 'r') as f:
 				# cookies = pickle.load(f)
 				cookies = json.load(f)
 				for cookie in cookies:
@@ -58,21 +69,23 @@ class Hotmail(AbstractISP):
 					except InvalidCookieDomainException as e:
 						print(e)
 					else:
-						print(f">> cookie {cookie['domain']} is loaded")
-				print('Cookies is loaded.')
-		except (FileNotFoundError, JSONDecodeError):
-			pass
+						print(f"> cookie is loaded: {cookie['domain']}")
+				print('Cookies are loaded.')
+		except (FileNotFoundError, JSONDecodeError) as e:
+			print(e)
 
 
 	def _save_cookies(self):
-		time.sleep(5)
+		time.sleep(3)
 		print('_save_cookies')
-		with open(os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl'), 'w') as f:
+		cookie_path = os.path.join(settings.MEDIA_ROOT, f'profile_cookies/{self.profile.email}.pkl')
+		with open(cookie_path, 'r+') as f:
 			for c in self.driver.get_cookies():
 				print(c['domain'])
 
+			cookies = json.load(f)
 			# pickle.dump(self.driver.get_cookies(), f)
-			json.dump(self.driver.get_cookies(), f, indent=2)
+			json.dump(cookies.extend(self.driver.get_cookies()), f, indent=2)
 			print('Cookies is saved.')
 
 
@@ -86,11 +99,14 @@ class Hotmail(AbstractISP):
 			self.loggedin = False
 			print('[Info] {} (automatic login...).'.format(self.profile.email))
 
+			time.sleep(1)
+
 			email = self.driver.find_element_by_id("i0116")
 			email.clear()
 			email.send_keys(self.profile.email)
 			email.send_keys(Keys.RETURN)
 
+			self.driver.implicitly_wait(2)
 			time.sleep(1)
 
 			password = self.driver.find_element_by_id('i0118')
@@ -104,8 +120,13 @@ class Hotmail(AbstractISP):
 			
 			time.sleep(1)
 			# Click login
-			password.send_keys(Keys.RETURN)		
-			time.sleep(2)
+			try:
+				password.send_keys(Keys.RETURN)
+			except StaleElementReferenceException:
+				self.driver.find_element_by_css_selector('input[type=submit]').click()
+
+			self.driver.implicitly_wait(2)
+			# time.sleep(1)
 
 			# check the login status.
 			wait = WebDriverWait(self.driver, 20, poll_frequency=0.05)

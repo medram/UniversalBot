@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 from .models import List, Profile, Proxy, TaskAdaptor, Server
 
 APP_NAME = 'Universal Bot'
@@ -10,10 +11,10 @@ admin.site.index_title = 'Dashboard'
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-	list_display = ('id', 'email', 'updated', 'created')
+	list_display = ('id', 'email', 'status', 'updated', 'created')
 	list_display_links = ('id', 'email')
 	list_per_page = 25
-
+	# list_editable = ('status',)
 	list_filter = ('status', 'created')
 	search_fields = ('email', 'id')
 

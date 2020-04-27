@@ -1,1 +1,0 @@
-from .hotmail import Hotmail
