@@ -1,1 +1,1 @@
-from .Inbox_add_all_to_archive import Inbox_add_all_to_archive
+from .Inbox_select_all_mark_as_read import Inbox_select_all_mark_as_read

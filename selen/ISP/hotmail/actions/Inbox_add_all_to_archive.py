@@ -1,6 +1,6 @@
 from selen.abstract import ActionAbstract
 
-class Inbox_add_all_to_archive(ActionAbstract):
+class Inbox_select_all_mark_as_read(ActionAbstract):
 	
 	def apply(self):
-		print('Action Inbox_add_all_to_archive...')
+		print('Action Inbox_select_all_mark_as_read...')

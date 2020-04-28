@@ -20,27 +20,24 @@ from selenium.common.exceptions import (
 from selen.abstract import AbstractISP, ActionAbstract
 from selen import exceptions
 from universalbot.models import Actions
-from .actions import Inbox_add_all_to_archive
+from .actions import Inbox_select_all_mark_as_read
 
 
 class Hotmail(AbstractISP):
 
 	def do_actions(self):
 		if self.loggedin:
-			print('do_action')
-			print(self.actions)
 			for action in self.list.actions: # action is a str number
 				try:
-					ActionObject = self.actions[action]
+					ActionObject = self.actions[Actions(int(action))]
 					if isinstance(ActionObject, ActionAbstract):
-						print('Apply action ', action)
 						ActionObject.apply()
 				except KeyError:
 					pass
 
 	def register_actions(self):
 		print('register actions')
-		self.actions[Actions.INBOX_ADD_ALL_TO_ARCHIVE] = Inbox_add_all_to_archive(self)
+		self.actions[Actions.INBOX_SELECT_ALL_MARK_AS_READ] = Inbox_select_all_mark_as_read(self)
 
 
 	def login(self):

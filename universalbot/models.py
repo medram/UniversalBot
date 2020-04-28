@@ -13,9 +13,10 @@ from . import common
 
 
 class Actions(models.IntegerChoices):
-	INBOX_ADD_ALL_TO_ARCHIVE = (1, 'Inbox, add all to archive')
-	INBOX_MARK_ALL_AS_READ = (2, 'Inbox, mark all as read')
-	SPAM_REPORT_ALL_TO_INBOX = (3, 'Spam, report all to inbox')
+	INBOX_SELECT_ALL_MARK_AS_READ 		= (1, '(Inbox), Select all mark as read.')
+	SPAM_SELECT_ALL_MARK_AS_READ 		= (2, '(Spam), Select all mark as read.')
+	INBOX_OPEN_MESSAGES 				= (3, '(Inbox), Open messages.')
+	SPAM_REPORT_ALL_TO_INBOX 			= (4, '(Spam), report all to inbox.')
 
 
 class List(models.Model):
