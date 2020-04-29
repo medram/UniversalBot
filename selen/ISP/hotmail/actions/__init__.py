@@ -1,1 +1,2 @@
 from .Inbox_select_all_mark_as_read import Inbox_select_all_mark_as_read
+from .Spam_select_all_mark_as_read import Spam_select_all_mark_as_read

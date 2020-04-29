@@ -20,7 +20,7 @@ from selenium.common.exceptions import (
 from selen.abstract import AbstractISP, ActionAbstract
 from selen import exceptions, utils
 from universalbot.models import Actions
-from .actions import Inbox_select_all_mark_as_read
+from .actions import Inbox_select_all_mark_as_read, Spam_select_all_mark_as_read
 
 
 class Hotmail(AbstractISP):
@@ -28,7 +28,7 @@ class Hotmail(AbstractISP):
 	def do_actions(self):
 		if self.loggedin:
 
-			self.driver.get('https://outlook.live.com/mail/0/sentitems')
+			self.driver.get('https://outlook.live.com/mail/0/inbox')
 			self.driver.implicitly_wait(4)
 
 			with utils.document_completed(self.driver, 20):
@@ -47,6 +47,7 @@ class Hotmail(AbstractISP):
 	def register_actions(self):
 		print('register actions')
 		self.actions[Actions.INBOX_SELECT_ALL_MARK_AS_READ] = Inbox_select_all_mark_as_read(self)
+		self.actions[Actions.SPAM_SELECT_ALL_MARK_AS_READ] = Spam_select_all_mark_as_read(self)
 
 
 	def login(self):

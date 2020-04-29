@@ -14,10 +14,10 @@ from selen import utils
 class Inbox_select_all_mark_as_read(ActionAbstract):
 
 	def apply(self):
-		print('Action Inbox_select_all_mark_as_read...')
+		print(f'Firing Action: {self.__class__.__name__}...')
 		driver = self.isp.driver
 
-		print('Start ActionChains...')
+		# print('Start ActionChains...')
 		actions = ActionChains(driver)
 		# Go to inbox
 		actions.send_keys('g').send_keys('i')
@@ -31,9 +31,9 @@ class Inbox_select_all_mark_as_read(ActionAbstract):
 		try:
 			if wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.ms-Dialog-actionsRight'))):
 				# mark all as read
-				print('Confirm')
+				# print('Confirm')
 				actions.send_keys(Keys.RETURN).perform()
 				# wait to make sure the action is applied
 				time.sleep(2)
 		except TimeoutException:
-			print(f'{self.__name__} not granted')
+			print(f'{self.__class__.__name__} not granted')
