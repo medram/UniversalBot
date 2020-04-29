@@ -18,7 +18,7 @@ from selenium.common.exceptions import (
 
 
 from selen.abstract import AbstractISP, ActionAbstract
-from selen import exceptions
+from selen import exceptions, utils
 from universalbot.models import Actions
 from .actions import Inbox_select_all_mark_as_read
 
@@ -27,13 +27,22 @@ class Hotmail(AbstractISP):
 
 	def do_actions(self):
 		if self.loggedin:
-			for action in self.list.actions: # action is a str number
-				try:
-					ActionObject = self.actions[Actions(int(action))]
-					if isinstance(ActionObject, ActionAbstract):
-						ActionObject.apply()
-				except KeyError:
-					pass
+
+			self.driver.get('https://outlook.live.com/mail/0/sentitems')
+			self.driver.implicitly_wait(4)
+
+			with utils.document_completed(self.driver, 20):
+				# let javascript requests finish.
+				time.sleep(15)
+				
+				for action in self.list.actions: # action is a str number
+					try:
+						ActionObject = self.actions[Actions(int(action))]
+						if isinstance(ActionObject, ActionAbstract):
+							ActionObject.apply()
+					except KeyError:
+						pass
+
 
 	def register_actions(self):
 		print('register actions')
