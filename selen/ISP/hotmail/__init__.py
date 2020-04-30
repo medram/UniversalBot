@@ -20,7 +20,11 @@ from selenium.common.exceptions import (
 from selen.abstract import AbstractISP, ActionAbstract
 from selen import exceptions, utils
 from universalbot.models import Actions
-from .actions import Inbox_select_all_mark_as_read, Spam_select_all_mark_as_read
+from .actions import (
+		Inbox_select_all_mark_as_read,
+		Spam_select_all_mark_as_read,
+		Spam_report_all_to_inbox
+	)
 
 
 class Hotmail(AbstractISP):
@@ -45,9 +49,9 @@ class Hotmail(AbstractISP):
 
 
 	def register_actions(self):
-		print('register actions')
 		self.actions[Actions.INBOX_SELECT_ALL_MARK_AS_READ] = Inbox_select_all_mark_as_read(self)
 		self.actions[Actions.SPAM_SELECT_ALL_MARK_AS_READ] = Spam_select_all_mark_as_read(self)
+		self.actions[Actions.SPAM_REPORT_ALL_TO_INBOX] = Spam_report_all_to_inbox(self)
 
 
 	def login(self):
@@ -136,9 +140,12 @@ class Hotmail(AbstractISP):
 			# time.sleep(1)
 
 			# check the login status.
-			wait = WebDriverWait(self.driver, 20, poll_frequency=0.05)
-			if not wait.until(EC.url_contains('https://account.microsoft.com')):
-				print('[Info] {} (May need a manual login).'.format(self.profile.email))
+			try:
+				wait = WebDriverWait(self.driver, 20, poll_frequency=0.05)
+				if not wait.until(EC.url_contains('https://account.microsoft.com')):
+					print('[Info] {} (May need a manual login).'.format(self.profile.email))
+					raise exceptions.CantLogin()
+			except:
 				raise exceptions.CantLogin()
 
 			# report that we are logged in :D
