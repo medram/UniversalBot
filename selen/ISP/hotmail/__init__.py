@@ -23,7 +23,8 @@ from universalbot.models import Actions
 from .actions import (
 		Inbox_select_all_mark_as_read,
 		Spam_select_all_mark_as_read,
-		Spam_report_all_to_inbox
+		Spam_report_all_to_inbox,
+		Inbox_archive_all
 	)
 
 
@@ -52,6 +53,7 @@ class Hotmail(AbstractISP):
 		self.actions[Actions.INBOX_SELECT_ALL_MARK_AS_READ] = Inbox_select_all_mark_as_read(self)
 		self.actions[Actions.SPAM_SELECT_ALL_MARK_AS_READ] = Spam_select_all_mark_as_read(self)
 		self.actions[Actions.SPAM_REPORT_ALL_TO_INBOX] = Spam_report_all_to_inbox(self)
+		self.actions[Actions.INBOX_ARCHIVE_ALL] = Inbox_archive_all(self)
 
 
 	def login(self):

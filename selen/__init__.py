@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import WebDriverException
 from universalbot.models import List
 
 from . import exceptions
@@ -15,8 +16,9 @@ for profile in profiles:
 		isp.login()
 		isp.do_actions()
 
-	except exceptions.EmptyInbox:
-		print('Empty Inbox')
+	except WebDriverException as e:
+		if 'Message: Reached error page' in str(e):
+			print(f'Please check your internet connection of your server/RDP')
 	# except Exception as e:
 	# 	print(e)
 	else:

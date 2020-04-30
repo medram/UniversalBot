@@ -17,6 +17,7 @@ class Actions(models.IntegerChoices):
 	SPAM_SELECT_ALL_MARK_AS_READ 		= (2, '(Spam), Select all mark as read.')
 	INBOX_OPEN_MESSAGES 				= (3, '(Inbox), Open messages.')
 	SPAM_REPORT_ALL_TO_INBOX 			= (4, '(Spam), report all to inbox.')
+	INBOX_ARCHIVE_ALL 					= (5, '(Inbox), archive all.')
 
 
 class List(models.Model):
