@@ -23,23 +23,28 @@ class Spam_report_all_to_inbox(ActionAbstract):
 
 		with utils.document_completed(driver, 20):
 			# let javascript requests finish.
-			time.sleep(5)
+			time.sleep(8)
 
-			actions = ActionChains(driver)
-			# Select all messages.
-			actions.key_down(Keys.CONTROL).send_keys('a').key_up(Keys.CONTROL).perform()
-			time.sleep(2)
+			# Scroll down.
+			with utils.scroll_down(driver, 'div.customScrollBar.RKFl-TUsdXTE7ZZWxFGwX'):
+				actions = ActionChains(driver)
 
-			# report all to inbox.
-			try:
-				not_junk_button = driver.find_elements_by_css_selector('button.ms-Button.T-xELtdXJl3uwSp_eaCQ4')[1]
-				not_junk_button.click()
-				
-				time.sleep(1)
-				wait = WebDriverWait(driver, 15)
-				if wait.until_not(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div#notificationBarText div'))):
-					# print('Confirm')
-					# wait to make sure the action is applied
-					time.sleep(3)
-			except:
-				print(f'{self.__class__.__name__} not granted')
+				# select all msgs.
+				utils.select_all_msgs(driver)
+				time.sleep(5)
+
+				# report all to inbox.
+				try:
+					not_junk_button = driver.find_elements_by_css_selector('button.ms-Button.T-xELtdXJl3uwSp_eaCQ4')[1]
+					not_junk_button.click()
+					
+					time.sleep(1)
+					wait = WebDriverWait(driver, 15)
+					undo_notification = (By.CSS_SELECTOR, 'div#notificationBarText div')
+					if wait.until(EC.presence_of_element_located(undo_notification)) \
+				 		and wait.until_not(EC.presence_of_element_located(undo_notification)):
+						# print('Confirm')
+						# wait to make sure the action is applied
+						time.sleep(3)
+				except TimeoutException:
+					print(f'{self.__class__.__name__} not granted')
