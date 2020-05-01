@@ -36,9 +36,10 @@ class Hotmail(AbstractISP):
 			self.driver.get('https://outlook.live.com/mail/0/inbox')
 			self.driver.implicitly_wait(4)
 
-			with utils.document_completed(self.driver, 20):
+			with utils.screen_is_loaded(self.driver):
+				print('Screen loaded.')
 				# let javascript requests finish.
-				time.sleep(15)
+				time.sleep(10)
 				
 				for action in self.list.actions: # action is a str number
 					try:
@@ -119,8 +120,8 @@ class Hotmail(AbstractISP):
 			email.send_keys(self.profile.email)
 			email.send_keys(Keys.RETURN)
 
-			self.driver.implicitly_wait(2)
-			time.sleep(1)
+			self.driver.implicitly_wait(3)
+			time.sleep(2)
 
 			password = self.driver.find_element_by_id('i0118')
 			password.clear()
@@ -131,6 +132,7 @@ class Hotmail(AbstractISP):
 			except:
 				pass
 			
+			self.driver.implicitly_wait(3)
 			time.sleep(1)
 			# Click login
 			try:

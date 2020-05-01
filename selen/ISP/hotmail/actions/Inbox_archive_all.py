@@ -7,9 +7,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-
 from selen.abstract import ActionAbstract
 from selen import utils
+
 
 class Inbox_archive_all(ActionAbstract):
 
@@ -25,24 +25,24 @@ class Inbox_archive_all(ActionAbstract):
 
 		# Scroll down.
 		with utils.scroll_down(driver, 'div.customScrollBar.RKFl-TUsdXTE7ZZWxFGwX'):
-
-			# choose msgs randomly
-			"""
-			let messages = Object.values($("div[role=checkbox]"))
-			messages.pop(0) // to remove the 'select all' checkbox
-			"""
-
-			time.sleep(2)
+			# print('scrolling is done.')
+			# select all msgs.
+			utils.select_all_msgs(driver)
+			# print('messages are selected')
+			time.sleep(5)
+			# print('timeout ends')
 			# Archive all selected messages.
+			actions = ActionChains(driver)
 			actions.send_keys('e').perform()
+			# print('Archive now')
 
 			wait = WebDriverWait(driver, 15)
+			undo_notification = (By.CSS_SELECTOR, 'div#notificationBarText div')
 			try:
-				if wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'div.ms-Dialog-actionsRight'))):
-					# mark all as read
+				if wait.until(EC.presence_of_element_located(undo_notification)) \
+					and wait.until_not(EC.presence_of_element_located(undo_notification)):
 					# print('Confirm')
-					actions.send_keys(Keys.RETURN).perform()
 					# wait to make sure the action is applied
-					time.sleep(2)
+					time.sleep(3)
 			except TimeoutException:
 				print(f'{self.__class__.__name__} not granted')

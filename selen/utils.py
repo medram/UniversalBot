@@ -4,6 +4,7 @@ from selenium.webdriver.support.events import AbstractEventListener
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
 class MyListeners(AbstractEventListener):
 	def before_close(self, driver):
@@ -26,10 +27,11 @@ class is_scroll_down:
 	def __init__(self, css_selector):
 		self.css_selector = css_selector
 
-	def __call_(self, driver):
+	def __call__(self, driver):
+		# print('scrolling...')
 		return driver.execute_script("""
-			let element = document.querySelector(%s)
-			if (element.scrollTop < element.scrollHeight)
+			let element = document.querySelector('%s')
+			if ((element.scrollTop + element.clientHeight) < element.scrollHeight)
 			{
 				console.log('Scrolling...')
 				element.scrollTo(0, element.scrollHeight)
@@ -39,34 +41,35 @@ class is_scroll_down:
 			return true
 			""" % self.css_selector)
 
+
 @contextlib.contextmanager
 def document_completed(driver, timeout=10):
-	WebDriverWait(driver, timeout).until(doc_complete)
+	WebDriverWait(driver, timeout, ignored_exceptions=(TimeoutException,)).until(doc_complete)
 	yield
 
 
 @contextlib.contextmanager
-def scroll_down(driver, css_selector, timeout=120):
+def scroll_down(driver, css_selector, timeout=60, poll_frequency=2):
 	if css_selector:
-		WebDriverWait(driver, timeout, poll_frequency=1).until(is_scroll_down(css_selector))
+		WebDriverWait(driver, timeout, poll_frequency=poll_frequency, ignored_exceptions=(TimeoutException,)).until(is_scroll_down(css_selector))
 	yield
 
 
-# r = driver.execute_script("""
-# 		let element = document.querySelector('div.customScrollBar.RKFl-TUsdXTE7ZZWxFGwX')
-		
-# 		let interval = setInterval(function(){
-# 			if (element.scrollTop < element.scrollHeight)
-# 			{
-# 				console.log('Scrolling...')
-# 				element.scrollTo(0, element.scrollHeight)
-# 			}
-# 			else
-# 			{
-# 				clearInterval(interval)
-# 			}
-# 		}, 500)
 
-# 		return 'DONE'
-# 	""")
-# print(r)
+@contextlib.contextmanager
+def screen_is_loaded(driver, timeout=60):
+	# print('is screen loaded ?!')
+	wait = WebDriverWait(driver, timeout=timeout, ignored_exceptions=(TimeoutException,))
+	yield wait.until_not(EC.presence_of_element_located((By.CSS_SELECTOR, 'div#loadingScreen')))
+
+
+def select_all_msgs(driver):
+	driver.execute_script("""
+		let messages = Object.values(document.querySelectorAll('div[role=checkbox]'))
+		
+		messages = messages.slice(1)
+
+		messages.map((msg, i) => {
+			msg.click()
+		})
+	""")
