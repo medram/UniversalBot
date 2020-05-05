@@ -13,7 +13,8 @@ from selenium.common.exceptions import (
 		NoSuchElementException,
 		ElementClickInterceptedException,
 		InvalidCookieDomainException,
-		StaleElementReferenceException
+		StaleElementReferenceException,
+		TimeoutException
 	)
 
 
@@ -24,7 +25,8 @@ from .actions import (
 		Inbox_select_all_mark_as_read,
 		Spam_select_all_mark_as_read,
 		Spam_report_all_to_inbox,
-		Inbox_archive_all
+		Inbox_archive_all,
+		Inbox_open_messages
 	)
 
 
@@ -55,6 +57,7 @@ class Hotmail(AbstractISP):
 		self.actions[Actions.SPAM_SELECT_ALL_MARK_AS_READ] = Spam_select_all_mark_as_read(self)
 		self.actions[Actions.SPAM_REPORT_ALL_TO_INBOX] = Spam_report_all_to_inbox(self)
 		self.actions[Actions.INBOX_ARCHIVE_ALL] = Inbox_archive_all(self)
+		self.actions[Actions.INBOX_OPEN_MESSAGES] = Inbox_open_messages(self)
 
 
 	def login(self):
@@ -141,15 +144,14 @@ class Hotmail(AbstractISP):
 				self.driver.find_element_by_css_selector('input[type=submit]').click()
 
 			self.driver.implicitly_wait(2)
-			# time.sleep(1)
+			time.sleep(1)
 
 			# check the login status.
 			try:
-				wait = WebDriverWait(self.driver, 20, poll_frequency=0.05)
-				if not wait.until(EC.url_contains('https://account.microsoft.com')):
-					print('[Info] {} (May need a manual login).'.format(self.profile.email))
-					raise exceptions.CantLogin()
-			except:
+				wait = WebDriverWait(self.driver, 30, poll_frequency=0.05)
+				wait.until(EC.url_contains('https://account.microsoft.com'))
+			except TimeoutException:
+				print('[Info] {} (May need a manual login).'.format(self.profile.email))
 				raise exceptions.CantLogin()
 
 			# report that we are logged in :D
