@@ -31,12 +31,12 @@ def run_lists(task_id):
 			for profile in l.profiles.all():
 				each_profile_start.send(profile.__class__, profile=profile, list_=l, task=task)
 				try:
-					# isp = Hotmail(profile, l)
-					# isp.login()
-					# isp.do_actions()
-					# isp.quit()
+					isp = Hotmail(profile, l, task)
+					isp.login()
+					isp.do_actions()
+					isp.quit()
 					print(f'profile {profile.pk}...')
-					time.sleep(5)
+					# time.sleep(5)
 
 				except WebDriverException as e:
 					if 'Message: Reached error page' in str(e):
