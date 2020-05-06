@@ -35,6 +35,9 @@ class AbstractISP(abc.ABC):
 	def logout(self):
 		pass
 
+	def quit(self):
+		self.driver.quit()
+
 	@abc.abstractmethod
 	def register_actions(self):
 		pass

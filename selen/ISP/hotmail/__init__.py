@@ -39,7 +39,6 @@ class Hotmail(AbstractISP):
 			self.driver.implicitly_wait(4)
 
 			with utils.screen_is_loaded(self.driver):
-				print('Screen loaded.')
 				# let javascript requests finish.
 				time.sleep(10)
 				
@@ -50,6 +49,8 @@ class Hotmail(AbstractISP):
 							ActionObject.apply()
 					except KeyError:
 						pass
+					except Exception as e:
+						print(e)
 
 
 	def register_actions(self):

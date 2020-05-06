@@ -91,6 +91,9 @@ class TaskAdaptor(models.Model):
 	run_at = Task._meta.get_field('run_at')
 	repeat = Task._meta.get_field('repeat')
 	repeat_until = Task._meta.get_field('repeat_until')
+	progress = models.IntegerField(default=0, null=True, blank=True)
+	# number of processed profiles. 
+	current = models.IntegerField(default=0, null=True, blank=True)
 
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)

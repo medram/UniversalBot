@@ -53,11 +53,17 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists', 'servers')
 	filter_horizontal = ('lists', 'servers')
 
-	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed')
+	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed', 'show_progress')
 	list_display_links = ('task_name',)
 	list_per_page = 25
 	list_filter = ('created', 'repeat')
 	search_fields = ('id', 'task_name')
+
+	def show_progress(self, obj):
+		if obj.progress:
+			return f'{obj.progress:0.02f}%'
+		return '-'
+	show_progress.short_description = 'Progress (%)'
 
 	def count_lists(self, obj):
 		return f'{obj.lists.count()} list(s)'
