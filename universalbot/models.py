@@ -85,6 +85,18 @@ class Proxy(models.Model):
 		return f'{self.proxy}:{self.port}'
 
 
+class Server(models.Model):
+	ip = models.GenericIPAddressField(verbose_name='IP Address')
+	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
+
+	class Meta:
+		db_table = 'servers'
+
+	def __str__(self):
+		status = 'Active' if self.active else 'Inactive'
+		return f'{self.ip}:{self.port} ({status})'
+
 
 class TaskAdaptor(models.Model):
 	task_name = models.CharField(max_length=255, null=True, unique=True)
@@ -98,7 +110,7 @@ class TaskAdaptor(models.Model):
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)
 	completed_task = models.OneToOneField(CompletedTask, null=True, blank=True, default=None, on_delete=models.SET_NULL)
-	servers = models.ManyToManyField('Server')
+	servers = models.ManyToManyField('Server', limit_choices_to={'active': True})
 
 	updated = models.DateTimeField(auto_now=True)
 	created = models.DateTimeField(auto_now_add=True)
@@ -107,23 +119,3 @@ class TaskAdaptor(models.Model):
 		db_table = 'task_adaptors'
 		verbose_name = 'Task'
 		verbose_name_plural = 'Tasks'
-
-
-# class Task_server(models.Model):
-# 	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)
-# 	server = models.ForeignKey('Server', on_delete=models.CASCADE)
-
-# 	def __str__(self):
-# 		return f'{self.task} - {self.server}'
-
-
-class Server(models.Model):
-	ip = models.GenericIPAddressField(verbose_name='IP Address')
-	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
-	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
-
-	class Meta:
-		db_table = 'servers'
-
-	def __str__(self):
-		return f'{self.ip}:{self.port}'
