@@ -43,10 +43,6 @@ class ListAdmin(admin.ModelAdmin):
 	show_actions.short_description = 'Actions'
 
 
-@admin.register(Proxy)
-class ProxyAdmin(admin.ModelAdmin):
-	pass
-
 
 @admin.register(TaskAdaptor)
 class TaskAdaptorAdmin(admin.ModelAdmin):
@@ -75,6 +71,24 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	is_completed.short_description = 'Completed'
 
 
+############## Actions ##############
+def activate_all_ips(modeladmin, request, queryset):
+	queryset.update(active=True)
+activate_all_ips.short_description = 'Activate'
+
+def diactivate_all_ips(modeladmin, request, queryset):
+	queryset.update(active=False)
+diactivate_all_ips.short_description = 'Diactivate'
+
+#####################################
+
+@admin.register(Proxy)
+class ProxyAdmin(admin.ModelAdmin):
+	list_display = ('proxy', 'port', 'active')
+	list_per_page = 25
+	search_fields = ('proxy', 'port')
+	list_filter = ('active',)
+	actions = (activate_all_ips, diactivate_all_ips)
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
@@ -82,3 +96,4 @@ class ServerAdmin(admin.ModelAdmin):
 	list_per_page = 25
 	search_fields = ('ip', 'port')
 	list_filter = ('active',)
+	actions = (activate_all_ips, diactivate_all_ips)

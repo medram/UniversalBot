@@ -85,19 +85,6 @@ class Proxy(models.Model):
 		return f'{self.proxy}:{self.port}'
 
 
-class Server(models.Model):
-	ip = models.GenericIPAddressField(verbose_name='IP Address')
-	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
-	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
-
-	class Meta:
-		db_table = 'servers'
-
-	def __str__(self):
-		status = 'Active' if self.active else 'Inactive'
-		return f'{self.ip}:{self.port} ({status})'
-
-
 class TaskAdaptor(models.Model):
 	task_name = models.CharField(max_length=255, null=True, unique=True)
 	run_at = Task._meta.get_field('run_at')
@@ -119,3 +106,16 @@ class TaskAdaptor(models.Model):
 		db_table = 'task_adaptors'
 		verbose_name = 'Task'
 		verbose_name_plural = 'Tasks'
+
+
+class Server(models.Model):
+	ip = models.GenericIPAddressField(verbose_name='IP Address')
+	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
+
+	class Meta:
+		db_table = 'servers'
+
+	def __str__(self):
+		status = 'Active' if self.active else 'Inactive'
+		return f'{self.ip}:{self.port} ({status})'
