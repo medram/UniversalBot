@@ -73,8 +73,10 @@ class Profile(models.Model):
 
 
 class Proxy(models.Model):
-	proxy = models.GenericIPAddressField()
+	proxy = models.GenericIPAddressField(verbose_name='Proxy IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	username = models.CharField(max_length=40, null=True, blank=True)
+	password = models.CharField(max_length=40, null=True, blank=True)
 	active = models.BooleanField(default=True, help_text='Active means that the server proxy is up and running and is ready to use.')
 
 	class Meta:
@@ -97,7 +99,7 @@ class TaskAdaptor(models.Model):
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)
 	completed_task = models.OneToOneField(CompletedTask, null=True, blank=True, default=None, on_delete=models.SET_NULL)
-	servers = models.ManyToManyField('Server', limit_choices_to={'active': True})
+	servers = models.ManyToManyField('Server', limit_choices_to={'active': True}, verbose_name='Servers/RDPs')
 
 	updated = models.DateTimeField(auto_now=True)
 	created = models.DateTimeField(auto_now_add=True)

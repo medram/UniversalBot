@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from background_task.models import Task, CompletedTask
+
 from .models import List, Profile, Proxy, TaskAdaptor, Server
 
 APP_NAME = 'Universal Bot'
@@ -7,6 +9,10 @@ APP_NAME = 'Universal Bot'
 admin.site.site_title = f'{APP_NAME} v0.1.0'
 admin.site.site_header = f'{APP_NAME} v0.1.0'
 admin.site.index_title = 'Dashboard'
+
+
+admin.site.unregister(Task)
+admin.site.unregister(CompletedTask)
 
 
 @admin.register(Profile)

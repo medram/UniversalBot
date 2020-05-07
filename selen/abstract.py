@@ -4,6 +4,7 @@ import random
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 from .utils import MyListeners
 
@@ -26,12 +27,28 @@ class AbstractISP(abc.ABC):
 		server = random.choice(servers)
 		driver = webdriver.Remote(
 		   			command_executor=f'http://{server.ip}:{server.port}/wd/hub',
-		   			desired_capabilities=DesiredCapabilities.FIREFOX.copy()
+		   			desired_capabilities=self.get_capabilities()
 		   		)
 
 		# driver = EventFiringWebDriver(driver, MyListeners())
 		driver.implicitly_wait(10)
 		return driver
+
+	def get_capabilities(self):
+		capabilities = DesiredCapabilities.FIREFOX.copy()
+		# prox = Proxy()
+		# prox.proxy_type = ProxyType.MANUAL
+		# prox.http_proxy = "ip_addr:port"
+		# prox.socks_proxy = "ip_addr:port"
+		# prox.ssl_proxy = "ip_addr:port"
+		# prox.socks_username = ''
+		# prox.socks_password = ''
+
+
+		# prox.add_to_capabilities(capabilities)
+		
+		return capabilities
+
 
 	@abc.abstractmethod
 	def login(self):
