@@ -6,7 +6,6 @@ from .models import TaskAdaptor
 from background_task import background
 from selenium.common.exceptions import WebDriverException
 
-from selen import exceptions
 from selen.ISP.hotmail import Hotmail
 
 

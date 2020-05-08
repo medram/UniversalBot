@@ -7,8 +7,8 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 from .utils import MyListeners
+from universalbot import models
 
-server_url = 'http://127.0.0.1:4444/wd/hub'
 
 class AbstractISP(abc.ABC):
 	def __init__(self, profile, list_, task):
@@ -36,17 +36,36 @@ class AbstractISP(abc.ABC):
 
 	def get_capabilities(self):
 		capabilities = DesiredCapabilities.FIREFOX.copy()
-		# prox = Proxy()
-		# prox.proxy_type = ProxyType.MANUAL
-		# prox.http_proxy = "ip_addr:port"
-		# prox.socks_proxy = "ip_addr:port"
-		# prox.ssl_proxy = "ip_addr:port"
-		# prox.socks_username = ''
-		# prox.socks_password = ''
+		print('get_capabilities')
+		proxy = self.profile.proxy
 
+		if proxy is None or not proxy.active:
+			# use random default proxy
+			proxies = models.Proxy.objects.filter(active=True, default=True).all()
+			if proxies:
+				proxy = random.choice(proxies)
+			else:
+				proxy = None
 
-		# prox.add_to_capabilities(capabilities)
+		if proxy:
+			print('setting a proxy')
+			print(proxy)
+			prox = Proxy()
+			prox.proxy_type = ProxyType.MANUAL
+			if proxy.proxy_type == proxy.HTTP:
+				print('HTTP proxy')
+				prox.http_proxy = f'{proxy.ip}:{proxy.port}'
+				prox.ssl_proxy = f'{proxy.ip}:{proxy.port}'
+				prox.ftp_proxy = f'{proxy.ip}:{proxy.port}'
+			elif proxy.proxy_type == proxy.SOCKS:
+				prox.socks_proxy = f'{proxy.ip}:{proxy.port}'
+				print('Socks proxy')		
+				prox.socks_username = proxy.username
+				prox.socks_password = proxy.password
 		
+			prox.add_to_capabilities(capabilities)
+
+		print(capabilities)
 		return capabilities
 
 

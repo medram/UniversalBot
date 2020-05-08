@@ -64,6 +64,8 @@ class Profile(models.Model):
 	email = models.CharField(max_length=64, unique=True)
 	password = models.CharField(max_length=64)
 	status = models.BooleanField(default=False)
+	proxy = models.ForeignKey('Proxy', on_delete=models.SET_NULL,
+		limit_choices_to={'active': True}, null=True, blank=True)
 
 	updated 	= models.DateTimeField(auto_now=True)
 	created 	= models.DateTimeField(auto_now_add=True)
@@ -73,18 +75,31 @@ class Profile(models.Model):
 
 
 class Proxy(models.Model):
-	proxy = models.GenericIPAddressField(verbose_name='Proxy IP Address')
+
+	HTTP = 1
+	SOCKS = 2
+
+	Type = [
+		(HTTP, 'HTTP/HTTPS'),
+		(SOCKS, 'Socket4/Socket5')
+	]
+
+	ip = models.GenericIPAddressField(verbose_name='Proxy IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
 	username = models.CharField(max_length=40, null=True, blank=True)
 	password = models.CharField(max_length=40, null=True, blank=True)
 	active = models.BooleanField(default=True, help_text='Active means that the server proxy is up and running and is ready to use.')
+	default = models.BooleanField(default=False, help_text='Will be used for profiles that don\'t have their proxies.')
+	proxy_type = models.IntegerField(choices=Type, default=HTTP, verbose_name='Type')
+
+	created = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
 		db_table = 'proxies'
 		verbose_name_plural = 'Proxies'
 
 	def __str__(self):
-		return f'{self.proxy}:{self.port}'
+		return f'{self.ip}:{self.port}'
 
 
 class TaskAdaptor(models.Model):
@@ -114,6 +129,8 @@ class Server(models.Model):
 	ip = models.GenericIPAddressField(verbose_name='IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
 	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
+
+	created = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
 		db_table = 'servers'

@@ -14,6 +14,17 @@ admin.site.index_title = 'Dashboard'
 admin.site.unregister(Task)
 admin.site.unregister(CompletedTask)
 
+############## Actions ##############
+def activate_all_profiles(modeladmin, request, queryset):
+	queryset.update(status=True)
+activate_all_profiles.short_description = 'Activate'
+
+def deactivate_all_profiles(modeladmin, request, queryset):
+	queryset.update(status=False)
+deactivate_all_profiles.short_description = 'Deactivate'
+
+#####################################
+
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -23,6 +34,7 @@ class ProfileAdmin(admin.ModelAdmin):
 	# list_editable = ('status',)
 	list_filter = ('status', 'created')
 	search_fields = ('email', 'id')
+	actions = (activate_all_profiles, deactivate_all_profiles)
 
 
 @admin.register(List)
@@ -82,24 +94,27 @@ def activate_all_ips(modeladmin, request, queryset):
 	queryset.update(active=True)
 activate_all_ips.short_description = 'Activate'
 
-def diactivate_all_ips(modeladmin, request, queryset):
+def deactivate_all_ips(modeladmin, request, queryset):
 	queryset.update(active=False)
-diactivate_all_ips.short_description = 'Diactivate'
+deactivate_all_ips.short_description = 'Deactivate'
 
 #####################################
 
 @admin.register(Proxy)
 class ProxyAdmin(admin.ModelAdmin):
-	list_display = ('proxy', 'port', 'active')
+	list_display = ('ip', 'port', 'proxy_type', 'active', 'default', 'created')
 	list_per_page = 25
-	search_fields = ('proxy', 'port')
-	list_filter = ('active',)
-	actions = (activate_all_ips, diactivate_all_ips)
+	search_fields = ('ip', 'port')
+	list_filter = ('created', 'active', 'default')
+	list_editable = ('default',)
+	actions = (activate_all_ips, deactivate_all_ips)
+	fields = ('ip', 'port', 'proxy_type', 'username', 'password','active', 'default')
+
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-	list_display = ('ip', 'port', 'active')
+	list_display = ('ip', 'port', 'active', 'created')
 	list_per_page = 25
 	search_fields = ('ip', 'port')
-	list_filter = ('active',)
-	actions = (activate_all_ips, diactivate_all_ips)
+	list_filter = ('created', 'active')
+	actions = (activate_all_ips, deactivate_all_ips)
