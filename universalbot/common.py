@@ -1,13 +1,13 @@
 import csv
-from django.core.validators import validate_email
+from django.core.validators import validate_email, validate_ipv4_address, validate_integer
 from django.core.exceptions import ValidationError
 
-# import hotmailbot.models as models
+# from . import models
 
 # parse the csv file & create profiles form it.
 def create_profiles_from_list(l):
 	# print('>>> Creating profiles from csv...')
-	from .models import Profile
+	from .models import Profile, Proxy
 	try:
 		if bool(l.file):
 			with open(l.file.path) as f:
@@ -25,8 +25,27 @@ def create_profiles_from_list(l):
 							# print('use existing profile.')
 						except Profile.DoesNotExist:
 							# print(f"create {line['email']}...")
-							profile = Profile.objects.create(email=line['email'], password=line.get('password', None))
+							profile = Profile.objects.create(email=line['email'], password=line.get('password', None), status=True)
 						l.profiles.add(profile)
+
+						# assign proxy to its profile. 
+						try:
+							ip, port, *_ = line['proxy'].split(':')
+							port = int(port)
+						
+							validate_ipv4_address(ip)
+							if port < 1 or port > 65535:
+								raise ValidationError('Invalid port number')
+							
+							try:
+								p = Proxy.objects.get(ip=ip, port=port)
+							except Proxy.DoesNotExist:
+								p = Proxy.objects.create(ip=ip, port=port)
+							
+							profile.proxy = p
+							profile.save()
+						except (ValidationError, KeyError, ValueError) as e:
+							pass
 	except IOError as e:
 		pass
 		# print(e)

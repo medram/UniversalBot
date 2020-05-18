@@ -106,9 +106,9 @@ class ProxyAdmin(admin.ModelAdmin):
 	list_per_page = 25
 	search_fields = ('ip', 'port')
 	list_filter = ('created', 'active', 'default')
-	list_editable = ('default',)
+	# list_editable = ('default',)
 	actions = (activate_all_ips, deactivate_all_ips)
-	fields = ('ip', 'port', 'proxy_type', 'username', 'password','active', 'default')
+	fields = ('ip', 'port', 'proxy_type','active', 'default')
 
 
 @admin.register(Server)

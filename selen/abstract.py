@@ -36,7 +36,7 @@ class AbstractISP(abc.ABC):
 
 	def get_capabilities(self):
 		capabilities = DesiredCapabilities.FIREFOX.copy()
-		print('get_capabilities')
+		# print('get_capabilities')
 		proxy = self.profile.proxy
 
 		if proxy is None or not proxy.active:
@@ -48,24 +48,24 @@ class AbstractISP(abc.ABC):
 				proxy = None
 
 		if proxy:
-			print('setting a proxy')
-			print(proxy)
+			# print('setting a proxy')
+			# print(proxy)
 			prox = Proxy()
 			prox.proxy_type = ProxyType.MANUAL
 			if proxy.proxy_type == proxy.HTTP:
-				print('HTTP proxy')
+				# print('HTTP proxy')
 				prox.http_proxy = f'{proxy.ip}:{proxy.port}'
 				prox.ssl_proxy = f'{proxy.ip}:{proxy.port}'
 				prox.ftp_proxy = f'{proxy.ip}:{proxy.port}'
 			elif proxy.proxy_type == proxy.SOCKS:
+				# print('Socks proxy')
 				prox.socks_proxy = f'{proxy.ip}:{proxy.port}'
-				print('Socks proxy')		
 				prox.socks_username = proxy.username
 				prox.socks_password = proxy.password
 		
 			prox.add_to_capabilities(capabilities)
 
-		print(capabilities)
+		# print(capabilities)
 		return capabilities
 
 

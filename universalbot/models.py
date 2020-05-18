@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator, \
+from django.core.validators import MaxValueValidator, MinValueValidator,\
 				FileExtensionValidator, validate_email
 from multiselectfield import MultiSelectField
 from django.core.exceptions import ValidationError
@@ -57,9 +57,6 @@ class List(models.Model):
 		
 
 
-		
-
-
 class Profile(models.Model):
 	email = models.CharField(max_length=64, unique=True)
 	password = models.CharField(max_length=64)
@@ -85,7 +82,7 @@ class Proxy(models.Model):
 	]
 
 	ip = models.GenericIPAddressField(verbose_name='Proxy IP Address')
-	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
 	username = models.CharField(max_length=40, null=True, blank=True)
 	password = models.CharField(max_length=40, null=True, blank=True)
 	active = models.BooleanField(default=True, help_text='Active means that the server proxy is up and running and is ready to use.')
@@ -127,7 +124,7 @@ class TaskAdaptor(models.Model):
 
 class Server(models.Model):
 	ip = models.GenericIPAddressField(verbose_name='IP Address')
-	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(0)])
+	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
 	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
 
 	created = models.DateTimeField(auto_now_add=True)
