@@ -113,7 +113,7 @@ class ProxyAdmin(admin.ModelAdmin):
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-	list_display = ('ip', 'port', 'active', 'created')
+	list_display = ('ip', 'port', 'capacity','active', 'created')
 	list_per_page = 25
 	search_fields = ('ip', 'port')
 	list_filter = ('created', 'active')

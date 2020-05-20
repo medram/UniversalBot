@@ -1,3 +1,5 @@
+import queue
+
 from django.db import models
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator,\
@@ -121,12 +123,17 @@ class TaskAdaptor(models.Model):
 		verbose_name = 'Task'
 		verbose_name_plural = 'Tasks'
 
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self._queue = queue.Queue()
+
 
 class Server(models.Model):
 	ip = models.GenericIPAddressField(verbose_name='IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
 	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
-
+	capacity = models.IntegerField(default=4, validators=[MinValueValidator(1), MaxValueValidator(50)], 
+				help_text='How many profiles this server can handle concurrently, (from 1 to 50).')
 	created = models.DateTimeField(auto_now_add=True)
 
 	class Meta:

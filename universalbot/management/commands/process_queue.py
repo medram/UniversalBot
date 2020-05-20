@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 class Command(BaseCommand):
-	help = 'print the current timezone.'
+	help = 'Start processing the main queue.'
 
 	def add_arguments(self, parser):
 		pass
@@ -10,4 +10,4 @@ class Command(BaseCommand):
 		# parser.add_argument('-p', '--prefix', help='this is just a normal prefix')
 
 	def handle(self, *args, **kwargs):
-		import selen
+		from selen import process_queue
