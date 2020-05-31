@@ -123,9 +123,9 @@ class TaskAdaptor(models.Model):
 		verbose_name = 'Task'
 		verbose_name_plural = 'Tasks'
 
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self._queue = queue.Queue()
+	# def __init__(self, *args, **kwargs):
+	# 	super().__init__(*args, **kwargs)
+	# 	self._queue = queue.Queue()
 
 
 class Server(models.Model):

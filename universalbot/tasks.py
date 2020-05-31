@@ -55,48 +55,28 @@ def run_lists(task_id):
 		ApprovedTaskManager.register(task_id)
 		print(f'-> The Task ({task_id}) is pushed to Pools.')
 	
+	# try:
+	# 	task = TaskAdaptor.objects.get(pk=task_id)
+	# except TaskAdaptor.DoesNotExist:
+	# 	pass
+	# else:
+	# 	task.current = 0
+	# 	task.progress = 0
+	# 	task.save()
 
+	# 	task_started.send(TaskAdaptor, task=task)
 
+	# 	lists = task.lists.all()
 
-	try:
-		task = TaskAdaptor.objects.get(pk=task_id)
-	except TaskAdaptor.DoesNotExist:
-		pass
-	else:
-		task.current = 0
-		task.progress = 0
-		task.save()
+	# 	for l in lists:
+	# 		for profile in l.profiles.all():
+	# 			def sub_task():
+	# 				return run_profile(profile, l, task)
+	# 			# add a sub task to the main queue.
+	# 			task._queue.put(sub_task)
 
-		task_started.send(TaskAdaptor, task=task)
-
-		lists = task.lists.all()
-
-		# get active servers.
-		# servers = [ s for s in task.servers.all() if s.active ]
-		# profiles_list = [ profile for l in lists for profile in l.profiles.all() ]
-
-		for l in lists:
-			for profile in l.profiles.all():
-				def sub_task():
-					return run_profile(profile, l, task)
-				# add a sub task to the main queue.
-				task._queue.put(sub_task)
-
-				# register a queue to QueueManager
-				QM.register(task._queue)
-
-		# for server in servers:
-		# 	with ThreadPoolExecutor(max_workers=server.capacity) as executor:
-		# 		executor.map(run_profile, profiles_list)
-
-
-
-		# with ThreadPoolExecutor() as executor:
-		# 	futures_list = {executor.submit(run_profile, profile, l, task): profile for l in lists for profile in l.profiles.all()}
-		# 	for future in as_completed(futures_list):
-		# 		profile = futures_list[future]
-		# 		print(f'profile is finished {profile.pk}')
-
+	# 			# register a queue to QueueManager
+	# 			QM.register(task._queue)
 
 	print('Done!')
 

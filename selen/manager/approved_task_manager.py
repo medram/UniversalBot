@@ -1,7 +1,9 @@
 from selen import app_settings
 from universalbot.models import ATM
 
+from selen.common import Singleton
 
+@Singleton
 class ApprovedTaskManager:
 	_atm = ATM
 	
@@ -22,7 +24,7 @@ class ApprovedTaskManager:
 	def _refresh_tasks(self):
 		self.tasks = self._load_tasks()
 
-	def _refresh_lists(self):
+	def refresh_lists(self):
 		self._refresh_tasks()
 
 		# task Not found -> delete it
@@ -51,3 +53,5 @@ class ApprovedTaskManager:
 	@staticmethod
 	def unregister(task):
 		task.delete()
+
+ATM = ApprovedTaskManager.get_instance()

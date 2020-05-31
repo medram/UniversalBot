@@ -18,15 +18,11 @@ class _PoolsManager:
 
 	def create_pools(self):
 		servers = self._get_active_servers()
-		pools = {}
-		queues = {}
 		for server in servers:
 			q = Queue()
 			p = Pool(max_workers=server.capacity, queue=q, name=f'Pool_{str(server)}')
-			pools[server] = p
-			queues[server] = q
-
-		return pools, queues
+			self._pools[server] = p
+			self._queues[server] = q
 
 
 	def update_pools(self):
