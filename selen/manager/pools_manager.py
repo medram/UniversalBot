@@ -46,6 +46,20 @@ class _PoolsManager:
 				except KeyError:
 					pass
 
+	def get_pools_needs(self):
+		needs = {}
+		for s, q in self._queues.items():
+			if q.qsize() <= s.capacity * 2:
+				needs[s] = s.capacity * 2 - q.qsize()
+		return needs
+
+	def push_subtasks(self, subtasks):
+		# subtasks = {
+		# 	server1: [(run_profile, (p, l, task)), ()...]
+		# }
+		for server, subtasks in subtask.items():
+			for subtask in subtasks:
+				self._queues[server].put(subtask)
 
 
 PoolsManager = _PoolsManager.get_instance()

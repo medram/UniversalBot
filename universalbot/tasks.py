@@ -18,31 +18,6 @@ from selen.manager import ApprovedTaskManager
 # sub_tasks_queue = queue.Queue()
 
 
-def run_profile(profile, l, task):
-	""" This funtion execute profile actions using thread pool. """
-	each_profile_start.send(profile.__class__, profile=profile, list_=l, task=task)
-	try:
-		isp = Hotmail(profile, l, task)
-		isp.login()
-		isp.do_actions()
-		isp.quit()
-		print(f'profile {profile.pk}...')
-		# time.sleep(5)
-
-	except WebDriverException as e:
-		if 'Message: Reached error page' in str(e):
-			print(f'Please check your internet connection of your server/RDP')
-		else:
-			print(e)
-	except Exception as e:
-		print(e)
-		# exc_type, exc_value, exc_tb = sys.exc_info()
-		# traceback.print_exception(exc_type, exc_value, exc_tb)
-
-	each_profile_end.send(profile.__class__, profile=profile, list_=l, task=task)
-
-
-
 @background
 def run_lists(task_id):
 	task_id = task_id['task_id']
