@@ -142,3 +142,8 @@ class Server(models.Model):
 	def __str__(self):
 		status = 'Active' if self.active else 'Inactive'
 		return f'{self.ip}:{self.port} ({status})'
+
+
+class ATM(models.Model):
+	""" Hhhhh, not the ATM you know, it's ApprovedTaskManager """
+	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)

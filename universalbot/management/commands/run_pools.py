@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 class Command(BaseCommand):
-	help = 'Start processing the main queue.'
+	help = 'Create Pools and its queues and run it.'
 
 	def add_arguments(self, parser):
 		pass
@@ -10,4 +10,4 @@ class Command(BaseCommand):
 		# parser.add_argument('-p', '--prefix', help='this is just a normal prefix')
 
 	def handle(self, *args, **kwargs):
-		from selen import process_queue
+		from selen import run_pools

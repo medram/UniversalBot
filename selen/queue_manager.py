@@ -1,8 +1,6 @@
 import queue
 import threading
 
-print(threading.enumerate())
-exit()
 
 class MainQueue(queue.Queue):
 	def __init__(self, *args, **kwargs):
