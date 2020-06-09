@@ -25,7 +25,7 @@ class Actions(models.IntegerChoices):
 class List(models.Model):
 	name = models.CharField(max_length=32, unique=True)
 	actions = MultiSelectField(max_length=256, choices=Actions.choices)
-	file = models.FileField(upload_to='profiles_lists/%Y/%m/', null=True, blank=True, 
+	file = models.FileField(upload_to='profiles_lists/%Y/%m/', null=True, blank=True,
 		verbose_name='Load profiles from a csv file',
 		validators=[FileExtensionValidator(['csv'])]
 		)
@@ -56,7 +56,7 @@ class List(models.Model):
 		elif old_list and bool(old_list.file) and bool(self.file):
 			if old_list.file.path != self.file.path:
 				transaction.on_commit(lambda: common.create_profiles_from_list(self))
-		
+
 
 
 class Profile(models.Model):
@@ -107,7 +107,7 @@ class TaskAdaptor(models.Model):
 	repeat = Task._meta.get_field('repeat')
 	repeat_until = Task._meta.get_field('repeat_until')
 	progress = models.IntegerField(default=0, null=True, blank=True)
-	# number of processed profiles. 
+	# number of processed profiles.
 	current = models.IntegerField(default=0, null=True, blank=True)
 
 	lists = models.ManyToManyField('List')
@@ -132,7 +132,7 @@ class Server(models.Model):
 	ip = models.GenericIPAddressField(verbose_name='IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
 	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
-	capacity = models.IntegerField(default=4, validators=[MinValueValidator(1), MaxValueValidator(50)], 
+	capacity = models.IntegerField(default=4, validators=[MinValueValidator(1), MaxValueValidator(50)],
 				help_text='How many profiles this server can handle concurrently, (from 1 to 50).')
 	created = models.DateTimeField(auto_now_add=True)
 
@@ -145,5 +145,5 @@ class Server(models.Model):
 
 
 class ATM(models.Model):
-	""" Hhhhh, not the ATM you know, it's ApprovedTaskManager """
+	""" Hhhhh, not the ATM you know, it's ApprovedTaskManagerModel """
 	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)

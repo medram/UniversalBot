@@ -1,14 +1,13 @@
 class Singleton:
 	def __init__(self, cls):
 		self._cls = cls
-		print('init Singleton')
 
 	def get_instance(self):
 		try:
 			return self._instance
 		except AttributeError:
 			self._instance = self._cls()
-		
+
 		return self._instance
 
 	def __call__(self):

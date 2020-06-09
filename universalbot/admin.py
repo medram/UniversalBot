@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from background_task.models import Task, CompletedTask
 
-from .models import List, Profile, Proxy, TaskAdaptor, Server
+from .models import List, Profile, Proxy, TaskAdaptor, Server, ATM
 
 APP_NAME = 'Universal Bot'
 
@@ -48,7 +48,7 @@ class ListAdmin(admin.ModelAdmin):
 	date_hierarchy = 'created'
 
 	# at adding or editting
-	fields = ('name', 'file', 'profiles', 'actions')	
+	fields = ('name', 'file', 'profiles', 'actions')
 	filter_horizontal = ('profiles',)
 
 
@@ -118,3 +118,8 @@ class ServerAdmin(admin.ModelAdmin):
 	search_fields = ('ip', 'port')
 	list_filter = ('created', 'active')
 	actions = (activate_all_ips, deactivate_all_ips)
+
+
+@admin.register(ATM)
+class ATMAdmin(admin.ModelAdmin):
+	pass

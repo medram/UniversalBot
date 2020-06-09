@@ -11,8 +11,9 @@ from background_task import background
 from selenium.common.exceptions import WebDriverException
 
 from selen.ISP.hotmail import Hotmail
-from selen.queue_manager import QM
+# from selen.queue_manager import QM
 from selen.manager import ApprovedTaskManager
+# from selen.manager import ATM
 
 # main queue.
 # sub_tasks_queue = queue.Queue()
@@ -27,11 +28,11 @@ def run_lists(task_id):
 	except TaskAdaptor.DoesNotExist:
 		pass
 	else:
-		ApprovedTaskManager.register(task_id)
+		ApprovedTaskManager.register(task)
 		print(f'-> The Task ({task_id}) is pushed to Pools.')
-	
+
 	print('Done!')
 
-	task_finished.send(TaskAdaptor, task=task)
+	# task_finished.send(TaskAdaptor, task=task)
 
 

@@ -31,9 +31,9 @@ def run_profile(profile, l, task):
 
 
 @Singleton
-class ApprovedTaskManager:
+class _ApprovedTaskManager:
 	_atm = ATM
-	
+
 	def __init__(self):
 		self.tasks = self._load_tasks()
 		self._lists = {}
@@ -46,7 +46,7 @@ class ApprovedTaskManager:
 
 
 	def _load_tasks(self):
-		return _atm.objects.all()
+		return self._atm.objects.all()
 
 	def _refresh_tasks(self):
 		self.tasks = self._load_tasks()
@@ -73,13 +73,14 @@ class ApprovedTaskManager:
 					)
 
 
-	@staticmethod
-	def register(task):
-		_atm.objects.create(task=task)
+	def register(self, task):
+		self._atm.objects.create(task=task)
 
-	@staticmethod
-	def unregister(task):
-		task.delete()
+	def unregister(self, task):
+		try:
+			self._atm.objects.get(task=task).delete()
+		except self._atm.DoesNotExist:
+			pass
 
 	def get_subtasks(self, s, n):
 		profile_list = []
@@ -92,4 +93,4 @@ class ApprovedTaskManager:
 		return profile_list
 
 
-ATM = ApprovedTaskManager.get_instance()
+ApprovedTaskManager = _ApprovedTaskManager.get_instance()
