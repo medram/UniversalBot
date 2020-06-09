@@ -11,7 +11,7 @@ def execption_handler(thread_name, exception):
 
 class Worker(threading.Thread):
 
-    def __init__(self, name, queue, result, wait_queue=False, callback=None, 
+    def __init__(self, name, queue, result, wait_queue=False, callback=None,
         execption_handler=execption_handler):
 
         threading.Thread.__init__(self)
@@ -35,7 +35,7 @@ class Worker(threading.Thread):
 
     def aborted(self):
         return self._abort.is_set()
-    
+
     def pause(self):
         self._pause.set()
         self._idle.set()
@@ -84,7 +84,7 @@ class Worker(threading.Thread):
                 self.result.put(r)
                 if self.callback:
                     self.callback(r)
-                
+
             except Exception as e:
                 print('Exception has occured')
                 self.execption_handler(self.name, e)
@@ -98,13 +98,13 @@ class Worker(threading.Thread):
 
 
 class Pool:
-    def __init__(self, max_workers=os.cpu_count() + 4, name=None, queue=None, wait_queue=True, 
+    def __init__(self, max_workers=os.cpu_count() + 4, name=None, queue=None, wait_queue=True,
         result_queue=None, callback=None, execption_handler=execption_handler):
         self.name = name
         self.max_worker = max_workers
         self.callback = callback
         self.execption_handler = execption_handler
-        
+
         self.queue = queue if isinstance(queue, Queue) else Queue()
         self.result_queue = result_queue if isinstance(result_queue, Queue) else Queue()
         self.wait_queue = wait_queue
@@ -173,7 +173,6 @@ class Pool:
 
     def __del__(self):
         self.shutdown()
-        print(f'{self.name} is deleted')
 
     def is_paused(self):
         return False not in ( t.paused() for t in self.threads )
@@ -185,7 +184,7 @@ class Pool:
             t.pause()
         if timeout:
             # if block:
-            #     # to make sure start counting after all threads are paused. 
+            #     # to make sure start counting after all threads are paused.
             #     while self.is_paused():
             #         print(f'{self.name} sleeping 0.2s...({self.is_paused()})')
             #         time.sleep(0.2)

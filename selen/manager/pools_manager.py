@@ -57,7 +57,7 @@ class _PoolsManager:
 		# subtasks = {
 		# 	server1: [(run_profile, (p, l, task)), ()...]
 		# }
-		for server, subtasks in subtask.items():
+		for server, subtasks in subtasks.items():
 			for subtask in subtasks:
 				self._queues[server].put(subtask)
 
