@@ -75,7 +75,7 @@ class _ApprovedTaskManager:
 			if task_id not in self._lists:
 				self._lists[task_id] = (
 						[ s for s in task.servers.all() ],
-						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.all() ]
+						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
 					)
 		print(f'refresh_list: ({len(self._lists)} subtasks lists in list)')
 
@@ -90,9 +90,9 @@ class _ApprovedTaskManager:
 			pass
 
 	def get_subtasks(self, s, n):
-		print('=' * 60)
-		print('>>> LIST:', self._lists)
-		print('=' * 60)
+		# print('=' * 60)
+		# print('>>> LIST:', self._lists)
+		# print('=' * 60)
 		profile_list = []
 		# while len(profile_list) < n:
 		for _ in range(n):
@@ -103,8 +103,8 @@ class _ApprovedTaskManager:
 				# else:
 				# 	break
 
-		print('ATM get_subtasks: ', s,len(profile_list), 'subtasks')
-		print('lists:', self._lists)
+		print('ATM get_subtasks: ', s, len(profile_list), 'subtasks')
+		# print('lists:', self._lists)
 		return profile_list
 
 

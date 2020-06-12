@@ -67,10 +67,10 @@ class _PoolsManager:
 				except KeyError:
 					pass
 		print(f'update_pools: ({len(self._pools)} pools) ({len(self._queues)} queues)')
-		print('-' * 60)
-		for p, q in self._queues.items():
-			print(f'{p} - {q}, qsize: {q.qsize()}')
-		print('-' * 60)
+		# print('-' * 60)
+		# for p, q in self._queues.items():
+		# 	print(f'{p} - {q}, qsize: {q.qsize()}')
+		# print('-' * 60)
 
 	def get_pools_needs(self):
 		needs = {}

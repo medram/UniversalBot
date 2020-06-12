@@ -30,7 +30,7 @@ class List(models.Model):
 		validators=[FileExtensionValidator(['csv'])]
 		)
 
-	profiles = models.ManyToManyField('Profile', blank=True)
+	profiles = models.ManyToManyField('Profile', limit_choices_to={'status': True}, blank=True)
 
 	updated 	= models.DateTimeField(auto_now=True)
 	created 	= models.DateTimeField(auto_now_add=True)
@@ -140,8 +140,8 @@ class Server(models.Model):
 		db_table = 'servers'
 
 	def __str__(self):
-		status = 'Active' if self.active else 'Inactive'
-		return f'{self.ip}:{self.port} ({status})'
+		# status = 'Active' if self.active else 'Inactive'
+		return f'{self.ip}:{self.port} (capacity: {self.capacity})'
 
 
 class ATM(models.Model):

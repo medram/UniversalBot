@@ -131,7 +131,6 @@ class Pool:
         for t in self.threads:
             t.start()
 
-        print(self.threads)
         return True
 
     def is_alive(self):
