@@ -20,12 +20,14 @@ class ThreadRefresher(threading.Thread):
     def abort(self):
         self._abort.set()
         print('abort ThreadRefresher')
+        self._pools_manager.shutdown_pools()
 
     def aborted(self):
         return self._abort.is_set()
 
     def run(self):
         self._pools_manager.create_pools()
+        self._pools_manager.start_pools()
         self._approved_task_manager.refresh_list()
 
         while not self.aborted():
@@ -34,10 +36,12 @@ class ThreadRefresher(threading.Thread):
             self._approved_task_manager.refresh_list()
             # TODO: passing new sub_tasks to pools to process
             self.passing_subtasks_to_pools()
-            time.sleep(15)
+            print('waiting 15s...')
+            self._abort.wait(15)
 
 
     def passing_subtasks_to_pools(self):
+        print('passing_subtasks_to_pools')
         # get the necessary sub_tasks number from queues
         needs = self._pools_manager.get_pools_needs()
         # get these sub_tasks
@@ -50,7 +54,7 @@ class ThreadRefresher(threading.Thread):
         subtasks = {}
         for s, n in needs.items():
             subtasks[s] = self._approved_task_manager.get_subtasks(s, n)
-
+        print(f'get_subtasks: {subtasks} -> {s}')
         return subtasks
 
 

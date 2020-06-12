@@ -2,7 +2,7 @@ import os
 import time
 import threading
 
-from queue import Queue
+from queue import Queue, Empty
 
 
 def execption_handler(thread_name, exception):
@@ -68,7 +68,7 @@ class Worker(threading.Thread):
                 func, args, kwargs = self.queue.get(timeout=0.5)
                 # func = self.queue.get(timeout=0.5)
                 self._idle.clear()
-            except Exception:
+            except Empty:
                 # the queue is empty.
                 print(f'{self.name}: The Queue is empty.')
                 self._idle.set()
@@ -76,6 +76,8 @@ class Worker(threading.Thread):
                 if not self.wait_queue:
                     break
                 continue
+            except Exception as e:
+                pass
 
             # the task is available to work with.
             try:
@@ -119,7 +121,7 @@ class Pool:
         # self.idles = []
         # self.aborts = []
         self.threads = []
-        self.result_queue = result_queue if isinstance(result_queue, Queue) else Queue()
+        # self.result_queue = self.result_queue if isinstance(result_queue, Queue) else Queue()
 
         # create all threads
         for i in range(self.max_worker):
@@ -147,6 +149,10 @@ class Pool:
             t.resume() # the thread should be working to abort it.
             t.abort()
         self.block(block)
+
+        # clearing resources
+        # self.threads = [] # I should do this after all threads are shutted down.
+        self.result_queue = None
         print(f'{self.name} is shutted down')
 
     def join(self, timeout=None):
