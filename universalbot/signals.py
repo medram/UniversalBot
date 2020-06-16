@@ -39,20 +39,6 @@ def create_task(sender, instance, created, **kwargs):
 		instance.save()
 
 
-# Append the lists ids to the task as a parameters.
-# @receiver(m2m_changed, sender=TaskAdaptor.lists.through)
-# def add_params_to_task(sender, instance, action, model, pk_set, **kwargs):
-
-# 	if action == 'post_add':
-# 		args = (2,)
-# 		kwargs = {
-# 			# 'lists': tuple(pk_set)
-# 		}
-# 		instance.task.task_params = json.dumps((args, kwargs), sort_keys=True)
-# 		instance.task.save()
-
-
-
 # Update the task automatically
 @receiver(post_save, sender=TaskAdaptor)
 def save_task(sender, instance, created, **kwargs):
@@ -63,20 +49,6 @@ def save_task(sender, instance, created, **kwargs):
 		instance.task.repeat_until = instance.repeat_until
 		instance.task.save()
 
-
-# Update task_adapter when task is renewed
-# @receiver(task_rescheduled, sender=Task)
-# def rescheduled_task(sender, **kwargs):
-# 	print('>> task_rescheduled')
-	# try:
-	# 	task_adaptor = TaskAdaptor.objects.get(task_name=instance.verbose_name)
-	# 	print('>> instance:', instance.pk)
-	# 	print('>> task_adaptor.task:', task_adaptor.task)
-	# 	if not task_adaptor.task:
-	# 		task_adaptor.task = instance
-	# 		task_adaptor.save()
-	# except TaskAdaptor.DoesNotExist:
-	# 	pass
 
 # Delete the task automatically
 @receiver(post_delete, sender=TaskAdaptor)

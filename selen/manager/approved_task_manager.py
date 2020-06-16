@@ -1,13 +1,16 @@
 import time
+import threading
 
 from selen import app_settings
-from universalbot.models import ATM
+from universalbot.models import ATM, TaskAdaptor
 
 from selen.common import Singleton
-from universalbot.tasks_signals import task_started, task_finished, each_profile_start, each_profile_end
+from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start, 
+		each_profile_end, on_approved_task_manager_refresh_list)
 
 
 def run_profile(profile, l, task):
+	time.sleep(2)
 	print('run_profile is processed')
 	return None
 	""" This funtion execute profile actions using thread pool. """
@@ -33,15 +36,36 @@ def run_profile(profile, l, task):
 	each_profile_end.send(profile.__class__, profile=profile, list_=l, task=task)
 
 
+def sync_list(f):
+	""" Sync access to the self._lists variable """
+	def decorated(*args, **kwargs):
+		# wait until acquiring the list lock.
+		while ApprovedTaskManager._list_lock.is_set():
+			print('-----------------> waiting for lock')
+			time.sleep(0.5)
+
+		# acquire the lock
+		ApprovedTaskManager._list_lock.set()
+		print('-----------------> set the lock')
+		result = f(*args, **kwargs)
+		# release the lock
+		ApprovedTaskManager._list_lock.clear()
+		print('-----------------> release the lock')
+		return result
+
+	return decorated
+
 
 @Singleton
 class _ApprovedTaskManager:
 	_atm = ATM
+	_list_lock = threading.Event()
 
 	def __init__(self):
 		# list of TaskAdapters
 		self.tasks = self._load_tasks()
 		self._lists = {}
+
 		# self._lists = {
 		# 	'taskAdapterID': (
 		# 		['server_1', 'server_2'],
@@ -57,6 +81,7 @@ class _ApprovedTaskManager:
 	def _refresh_tasks(self):
 		self.tasks = self._load_tasks()
 
+	@sync_list
 	def refresh_list(self):
 		self._refresh_tasks()
 
@@ -79,6 +104,35 @@ class _ApprovedTaskManager:
 					)
 		print(f'refresh_list: ({len(self._lists)} subtasks lists in list)')
 
+		task_ids_to_delete = []
+		# delete the list  if the task list is empty. 
+		for task_id, value in self._lists.items():
+			if len(value[1]) == 0:
+				print(f'===> deleting {task_id}')
+				task_ids_to_delete.append(task_id)
+
+		#fire a signal
+		on_approved_task_manager_refresh_list.send(ApprovedTaskManager.__class__, lists=self._lists)
+
+		# delete the list from self._lists
+		for task_id in task_ids_to_delete:
+			del self._lists[task_id] # task_id is a string
+
+			# unregister a TaskAdaptor from a database if its list of sub_tasks is empty.
+			taskAdaptor = self._get_taskAdaptor(task_id)
+			if taskAdaptor:
+				self.unregister(taskAdaptor)
+
+
+
+
+
+	def _get_taskAdaptor(self, task_id):
+		task_id = int(task_id)
+		try:
+			return TaskAdaptor.objects.get(pk=task_id)
+		except TaskAdaptor.DoesNotExist:
+			return None
 
 	def register(self, task):
 		self._atm.objects.create(task=task)
@@ -89,6 +143,7 @@ class _ApprovedTaskManager:
 		except self._atm.DoesNotExist:
 			pass
 
+	@sync_list
 	def get_subtasks(self, s, n):
 		# print('=' * 60)
 		# print('>>> LIST:', self._lists)

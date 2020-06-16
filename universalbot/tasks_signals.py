@@ -6,7 +6,7 @@ task_finished 		= Signal(providing_args=['task'])
 task_errors 		= Signal(providing_args=['task'])
 each_profile_start 	= Signal(providing_args=['profile', 'list_', 'task']) 
 each_profile_end 	= Signal(providing_args=['profile', 'list_', 'task'])
-
+on_approved_task_manager_refresh_list = Signal(providing_args=['lists'])
 
 @receiver(task_started, sender=TaskAdaptor)
 def start(sender, task, **kwargs):
