@@ -102,14 +102,21 @@ class Proxy(models.Model):
 
 
 class TaskAdaptor(models.Model):
+	class QUEUE_STATUS(models.IntegerChoices):
+		PROCESSING 	= (0, 'Processing...')
+		COMPLETED 	= (1, 'Completed')
+		EMPTY		= (2, 'Empty') 
+
+
 	task_name = models.CharField(max_length=255, null=True, unique=True)
 	run_at = Task._meta.get_field('run_at')
 	repeat = Task._meta.get_field('repeat')
 	repeat_until = Task._meta.get_field('repeat_until')
 	# progress = models.IntegerField(default=0, null=True, blank=True)
 	# number of processed profiles.
-	qsize = models.IntegerField(default=0, null=True, blank=True)
-	total_qsize = models.IntegerField(default=0, null=True, blank=True)
+	qsize 			= models.IntegerField(default=0, null=True, blank=True)
+	total_qsize 	= models.IntegerField(default=0, null=True, blank=True)
+	queue_status 	= models.IntegerField(choices=QUEUE_STATUS.choices, default=QUEUE_STATUS.EMPTY)
 
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)

@@ -105,6 +105,8 @@ class _ApprovedTaskManager:
 					task_adaptor = self._get_taskAdaptor(task_id)
 					task_adaptor.total_qsize = len(self._lists[task_id][1])
 					task_adaptor.save()
+
+					self.report_taskAdapter_as_not_completed(task_adaptor)
 				except Exception:
 					pass
 
@@ -128,6 +130,7 @@ class _ApprovedTaskManager:
 			taskAdaptor = self._get_taskAdaptor(task_id)
 			if taskAdaptor:
 				self.unregister(taskAdaptor)
+				self.report_taskAdapter_as_completed(taskAdaptor)
 
 
 
@@ -141,6 +144,11 @@ class _ApprovedTaskManager:
 			return None
 
 	def register(self, task):
+		try:
+			task.completed_task = False
+			task.save()
+		except:
+			pass
 		self._atm.objects.create(task=task)
 
 	def unregister(self, task):
@@ -167,6 +175,25 @@ class _ApprovedTaskManager:
 		print('ATM get_subtasks: ', s, len(profile_list), 'subtasks')
 		# print('lists:', self._lists)
 		return profile_list
+
+
+	@staticmethod
+	def report_taskAdapter_as_completed(task_adapter):
+		# task is a task adapter
+		try:
+			task_adapter.queue_status = task_adapter.QUEUE_STATUS.COMPLETED
+			task_adapter.save()
+		except Exception:
+			pass
+
+	@staticmethod
+	def report_taskAdapter_as_not_completed(task_adapter):
+		# task is a task adapter
+		try:
+			task_adapter.queue_status = task_adapter.QUEUE_STATUS.PROCESSING
+			task_adapter.save()
+		except Exception:
+			pass
 
 
 ApprovedTaskManager = _ApprovedTaskManager.get_instance()
