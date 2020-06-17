@@ -109,6 +109,7 @@ class TaskAdaptor(models.Model):
 	# progress = models.IntegerField(default=0, null=True, blank=True)
 	# number of processed profiles.
 	qsize = models.IntegerField(default=0, null=True, blank=True)
+	total_qsize = models.IntegerField(default=0, null=True, blank=True)
 
 	lists = models.ManyToManyField('List')
 	task = models.OneToOneField(Task, null=True, blank=True, default=None, on_delete=models.SET_NULL)

@@ -11,8 +11,9 @@ from selen.manager import ApprovedTaskManager
 # 	task.save()
 
 
-@receiver(ts.on_approved_task_manager_refresh_list, sender=ApprovedTaskManager)
+@receiver(ts.on_approved_task_manager_refresh_list, sender=ApprovedTaskManager.__class__)
 def update_qsize(sender, lists, **kwargs):
+	# print('==========> Updating_qsize')
 	for task_id in lists:
 		task_adapter = sender._get_taskAdaptor(task_id)
 		if task_adapter:
@@ -20,7 +21,3 @@ def update_qsize(sender, lists, **kwargs):
 			qsize = len(lists[task_id][1])
 			task_adapter.qsize = qsize
 			task_adapter.save()
-			# if not qsize:
-			# 	task_adapter.progress = 100
-			# else:
-			# 	task_adapter.progress = round(...)

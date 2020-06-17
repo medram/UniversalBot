@@ -41,16 +41,13 @@ def sync_list(f):
 	def decorated(*args, **kwargs):
 		# wait until acquiring the list lock.
 		while ApprovedTaskManager._list_lock.is_set():
-			print('-----------------> waiting for lock')
 			time.sleep(0.5)
 
 		# acquire the lock
 		ApprovedTaskManager._list_lock.set()
-		print('-----------------> set the lock')
 		result = f(*args, **kwargs)
 		# release the lock
 		ApprovedTaskManager._list_lock.clear()
-		print('-----------------> release the lock')
 		return result
 
 	return decorated
@@ -102,6 +99,15 @@ class _ApprovedTaskManager:
 						[ s for s in task.servers.all() ],
 						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
 					)
+				
+				# try to update task_adapter if exists
+				try:
+					task_adaptor = self._get_taskAdaptor(task_id)
+					task_adaptor.total_qsize = len(self._lists[task_id][1])
+					task_adaptor.save()
+				except Exception:
+					pass
+
 		print(f'refresh_list: ({len(self._lists)} subtasks lists in list)')
 
 		task_ids_to_delete = []
@@ -126,8 +132,8 @@ class _ApprovedTaskManager:
 
 
 
-
-	def _get_taskAdaptor(self, task_id):
+	@staticmethod
+	def _get_taskAdaptor(task_id):
 		task_id = int(task_id)
 		try:
 			return TaskAdaptor.objects.get(pk=task_id)

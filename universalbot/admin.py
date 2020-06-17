@@ -67,22 +67,31 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists', 'servers')
 	filter_horizontal = ('lists', 'servers')
 
-	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'created', 'is_completed', 'show_progress', 'qsize')
+	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'total_profiles', 
+		'created', 'is_completed', 'show_progress')
 	list_display_links = ('task_name',)
 	list_per_page = 25
 	list_filter = ('created', 'repeat')
 	search_fields = ('id', 'task_name')
 
 	def show_progress(self, obj):
-		if obj.qsize:
-			all_profiles = sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
-			progress = round((all_profiles - obj.qsize) / all_profiles * 100, 2)
-			return f'{progress:0.02f}% ({obj.qsize} in queue)'
-		return '-'
+
+		# all_profiles = sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
+		try:
+			progress = round((obj.total_qsize - obj.qsize) / obj.total_qsize * 100, 2)
+		except ZeroDivisionError:
+			progress = 0
+		return f'{progress:0.02f}% ({obj.qsize} in queue)'
+		# return '-'
 	show_progress.short_description = 'Progress (%)'
 
+
+	def total_profiles(self, obj=None):
+		return '%d profiles' % sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
+
+
 	def count_lists(self, obj):
-		return f'{obj.lists.count()} list(s)'
+		return f'{obj.lists.count()} lists'
 	count_lists.short_description = 'Lists'
 
 	def is_completed(self, obj):
