@@ -66,6 +66,9 @@ class _PoolsManager:
 					del self._queues[s]
 				except KeyError:
 					pass
+
+		# TODO: Update pools threads
+
 		print(f'update_pools: ({len(self._pools)} pools) ({len(self._queues)} queues)')
 		# print('-' * 60)
 		# for p, q in self._queues.items():
