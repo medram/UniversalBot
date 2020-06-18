@@ -1,7 +1,29 @@
-{% extends "admin/base_site.html" %}
+{% extends 'admin/base.html' %}
 {% load static %}
+{% load extra_settings %}
 
+{% block branding %}
+<h1 class="head">
+	<a href="{% url 'admin:index' %}"><b>{% get_setting 'APP_NAME' default='Logo' %}</b> <small>v{% get_setting 'APP_VERSION' %}</small></a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.min.css' %}">
+	<link rel="stylesheet" href="{% static 'admin/css/base.css' %}">
+	<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
 
 {% block footer %}
-	<div style="color: #555; text-align: center; margin-top: 50px; padding: 15px;">&copy; 2020 UniversalBot (v0.1.0-alpha)</div>
+	<div style="color: #555; text-align: center; margin-top: 50px; padding: 15px;">&copy; 2020 {% get_setting 'APP_NAME' default='Logo' %} (v{% get_setting 'APP_VERSION' %})</div>
+    <!-- JavaScript -->
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.ar.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.fr.min.js' %}"></script>
 {% endblock %}

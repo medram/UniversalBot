@@ -1,0 +1,124 @@
+/*
+	color1 #34495e
+	color2 #303960
+	#303960
+*/
+a:link,
+a:visited {
+	color: #303960;
+}
+
+#header {
+	background-color: #303960;
+	color: #FFF;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+	color: #FFF;
+}
+
+#user-tools {
+	font-size: 13px;
+}
+
+#user-tools a:focus, #user-tools a:hover {
+	border-bottom-color: #FFF;
+	color: #FFF;
+}
+
+
+.module h2, .module caption, .inline-group h2 {
+	background-color: #303960;
+}
+
+div.breadcrumbs {
+	background-color: #414e85;
+
+}
+
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+	background-color: #414e85;
+}
+
+.button:active, input[type=submit]:active, input[type=button]:active, .button:focus, input[type=submit]:focus, input[type=button]:focus, .button:hover, input[type=submit]:hover, input[type=button]:hover {
+	background-color: #303960;
+}
+
+.object-tools a.addlink {
+	background-color: #6ab04c;
+}
+
+.object-tools a.addlink:hover {
+	background-color: #5a9641;
+}
+
+.module caption, .inline-group h2 {
+	border-radius: 5px;
+}
+
+.module h2 {
+	border-radius: 5px 5px 0 0;
+}
+
+/*.button.default, input[type=submit].default, .submit-row input.default {
+	background-color: #686de0;
+}
+
+.button.default:active, input[type=submit].default:active, .button.default:focus, input[type=submit].default:focus, .button.default:hover, input[type=submit].default:hover {
+	background-color: #4834d4;
+}*/
+
+/* ######################### bunch of Admin UI fixes ######################### */
+#header {
+	padding: 15px 40px;
+}
+
+td, th {
+	vertical-align: middle;
+	font-size: 15px;
+}
+
+.inline-group .tabular tr.has_original td {
+	vertical-align: top;
+}
+
+caption {
+	caption-side: unset;
+}
+
+#changelist #toolbar form #searchbar {
+	height: 29px !important;
+}
+
+label {
+	margin-bottom: 0px;
+}
+
+.submit-row a.deletelink {
+	height: auto !important;
+}
+
+body {
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji" !important;
+}
+
+.filtered .actions {
+	margin-bottom: 10px !important;
+}
+
+.inline-group .tabular fieldset.module .form-row {
+	display: table-row;
+	flex-wrap: unset;
+	margin-right: 0;
+    margin-left: 0;
+}
+
+.inline-group .tabular fieldset.module .empty-form {
+	display: none !important;
+}
+
+.inline-group .tabular td.original p {
+	height: auto !important;
+}
+
+/* ######################### End of bunch of Admin UI fixes ######################### */

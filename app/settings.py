@@ -31,15 +31,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'background_task',
+    'extra_settings',
+    'settings',
+    'universalbot',
+    'multiselectfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'background_task',
-    'universalbot.apps.UniversalbotConfig',
-    'multiselectfield',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +128,9 @@ DATETIME_FORMAT = 'd/m/Y H:i:s'
 
 STATIC_URL = '/assets/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'public/')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'app/static'),
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -137,3 +142,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # BACKGROUND_TASK_PRIORITY_ORDERING   = 'DESC'    # ASC/DESC
 # BACKGROUND_TASK_ASYNC_THREADS       = multiprocessing.cpu_count()
 
+####################### My custom settings #######################
+APP_NAME = 'UniversalBot'
+APP_VERSION = '1.0.0'
