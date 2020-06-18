@@ -103,7 +103,7 @@ class Proxy(models.Model):
 
 class TaskAdaptor(models.Model):
 	class QUEUE_STATUS(models.IntegerChoices):
-		PROCESSING 	= (0, 'Processing...')
+		PROCESSING 	= (0, 'Processing')
 		COMPLETED 	= (1, 'Completed')
 		EMPTY		= (2, 'Empty') 
 

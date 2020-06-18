@@ -31,17 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'background_task',
-    'extra_settings',
-    'settings',
-    'universalbot',
-    'multiselectfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'background_task',
+    'universalbot.apps.UniversalbotConfig',
+    'extra_settings',
+    'settings',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [

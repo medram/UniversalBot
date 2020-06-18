@@ -226,7 +226,6 @@ class Pool:
             need = abs(need)
             # TODO: delete some threads
             threads = []
-            print(f'============================> Deleting {need} threads')
             for _ in range(need):
                 t = self.threads.pop()
                 t.resume() # the thread should be working to abort it.

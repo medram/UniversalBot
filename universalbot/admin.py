@@ -1,6 +1,8 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import mark_safe
 from background_task.models import Task, CompletedTask
+
 
 from .models import List, Profile, Proxy, TaskAdaptor, Server, ATM
 
@@ -17,10 +19,12 @@ admin.site.unregister(CompletedTask)
 ############## Actions ##############
 def activate_all_profiles(modeladmin, request, queryset):
 	queryset.update(status=True)
+	modeladmin.message_user(request, f'Selected profiles are activated successfully.', messages.SUCCESS)
 activate_all_profiles.short_description = 'Activate'
 
 def deactivate_all_profiles(modeladmin, request, queryset):
 	queryset.update(status=False)
+	modeladmin.message_user(request, f'Selected profiles are deactivated successfully.', messages.SUCCESS)
 deactivate_all_profiles.short_description = 'Deactivate'
 
 #####################################
@@ -68,10 +72,10 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	filter_horizontal = ('lists', 'servers')
 
 	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'total_profiles', 
-		'created', 'queue_status', 'show_progress')
+		'created', 'get_queue_status', 'show_progress', 'queue_status')
 	list_display_links = ('task_name',)
 	list_per_page = 25
-	list_filter = ('created', 'repeat')
+	list_filter = ('created', 'repeat', 'queue_status')
 	search_fields = ('id', 'task_name')
 
 	def show_progress(self, obj):
@@ -92,7 +96,17 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 		return '%d profiles' % sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
 
 
-	def count_lists(self, obj):
+	def get_queue_status(self, obj=None):
+		if obj.queue_status == obj.QUEUE_STATUS.COMPLETED:
+			return mark_safe(f'<span class="badge badge-pill badge-success">{obj.get_queue_status_display().upper()}</span>')
+		elif obj.queue_status == obj.QUEUE_STATUS.PROCESSING:
+			return mark_safe(f'<span class="badge badge-pill badge-warning">{obj.get_queue_status_display().upper()}...</span>')
+		return mark_safe(f'<span class="badge badge-pill badge-secondary">{obj.get_queue_status_display().upper()}</span>')
+	
+	get_queue_status.short_description = 'Queue status'
+
+
+	def count_lists(self, obj=None):
 		return f'{obj.lists.count()} lists'
 	count_lists.short_description = 'Lists'
 
@@ -105,10 +119,12 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 ############## Actions ##############
 def activate_all_ips(modeladmin, request, queryset):
 	queryset.update(active=True)
+	modeladmin.message_user(request, f'Selected IPs are activated successfully.', messages.SUCCESS)
 activate_all_ips.short_description = 'Activate'
 
 def deactivate_all_ips(modeladmin, request, queryset):
 	queryset.update(active=False)
+	modeladmin.message_user(request, f'Selected IPs are deactivated successfully.', messages.SUCCESS)
 deactivate_all_ips.short_description = 'Deactivate'
 
 #####################################
