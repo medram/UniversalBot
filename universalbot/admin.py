@@ -77,12 +77,14 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	def show_progress(self, obj):
 
 		# all_profiles = sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
-		try:
-			progress = round((obj.total_qsize - obj.qsize) / obj.total_qsize * 100, 2)
-		except ZeroDivisionError:
-			progress = 0
-		return f'{progress:0.02f}% ({obj.qsize} in queue)'
-		# return '-'
+		if obj.queue_status == obj.QUEUE_STATUS.PROCESSING:
+			try:
+				progress = round((obj.total_qsize - obj.qsize) / obj.total_qsize * 100, 2)
+			except ZeroDivisionError:
+				progress = 0
+			return f'{progress:0.02f}% ({obj.qsize} in queue)'
+		
+		return '-'
 	show_progress.short_description = 'Progress (%)'
 
 
