@@ -67,7 +67,11 @@ class _PoolsManager:
 				except KeyError:
 					pass
 
-		# TODO: Update pools threads
+		# Update pools threads (remove or create more)
+		for s in servers:
+			if s.capacity != self._pools[s].count():
+				self._pools[s].update(s.capacity)
+
 
 		print(f'update_pools: ({len(self._pools)} pools) ({len(self._queues)} queues)')
 		# print('-' * 60)

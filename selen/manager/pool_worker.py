@@ -29,8 +29,7 @@ class Worker(threading.Thread):
     def abort(self, block=True):
         self._abort.set()
         # print(f'{self.name} is stopping...')
-        while block and self.is_alive():
-            time.sleep(0.5)
+        self.block(block)
         print(f'{self.name} is stopped')
 
     def aborted(self):
@@ -207,3 +206,38 @@ class Pool:
     def block(self, block=True):
         while block and self.is_alive():
             time.sleep(0.5)
+
+    def count(self):
+        return len(self.threads)
+
+
+    def update(self, n, block=False):
+
+        # create necissary threads
+        need = n - self.count()
+        if need > 0:
+            # TODO: create more threads
+            for _ in range(need):
+                t = Worker(f'Worker_{(self.count())} ({self.name})', self.queue, self.result_queue, wait_queue=self.wait_queue, callback=self.callback)               
+                t.start()
+                self.threads.append(t)
+
+        elif need < 0:
+            need = abs(need)
+            # TODO: delete some threads
+            threads = []
+            print(f'============================> Deleting {need} threads')
+            for _ in range(need):
+                t = self.threads.pop()
+                t.resume() # the thread should be working to abort it.
+                t.abort()
+                threads.append(t)
+
+            # block until the extra threads dead.
+            while block and any(( t.is_alive() for t in threads )):
+                time.sleep(0.5)
+
+
+
+
+
