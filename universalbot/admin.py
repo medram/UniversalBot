@@ -13,8 +13,8 @@ admin.site.site_header = f'{APP_NAME} v0.1.0'
 admin.site.index_title = 'Dashboard'
 
 
-admin.site.unregister(Task)
-admin.site.unregister(CompletedTask)
+# admin.site.unregister(Task)
+# admin.site.unregister(CompletedTask)
 
 ############## Actions ##############
 def activate_all_profiles(modeladmin, request, queryset):
