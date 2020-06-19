@@ -72,7 +72,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	filter_horizontal = ('lists', 'servers')
 
 	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'total_profiles', 
-		'created', 'get_queue_status', 'show_progress', 'queue_status')
+		'created', 'get_queue_status', 'show_progress')
 	list_display_links = ('task_name',)
 	list_per_page = 25
 	list_filter = ('created', 'repeat', 'queue_status')

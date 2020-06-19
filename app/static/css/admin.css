@@ -60,6 +60,10 @@ div.breadcrumbs {
 	border-radius: 5px 5px 0 0;
 }
 
+.selector-chosen h2 {
+    background: #414e85 !important;
+}
+
 /*.button.default, input[type=submit].default, .submit-row input.default {
 	background-color: #686de0;
 }

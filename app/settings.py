@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
     'background_task',
-    'universalbot.apps.UniversalbotConfig',
+    'universalbot',
     'extra_settings',
     'settings',
     'multiselectfield',
