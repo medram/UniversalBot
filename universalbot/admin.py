@@ -149,6 +149,6 @@ class ServerAdmin(admin.ModelAdmin):
 	actions = (activate_all_ips, deactivate_all_ips)
 
 
-@admin.register(ATM)
-class ATMAdmin(admin.ModelAdmin):
-	pass
+# @admin.register(ATM)
+# class ATMAdmin(admin.ModelAdmin):
+# 	pass
