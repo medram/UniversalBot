@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'background_task',
-    'universalbot.apps.UniversalbotConfig',
+    'universalbot',
     'extra_settings',
     'settings',
     'multiselectfield',
