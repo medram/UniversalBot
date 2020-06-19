@@ -125,4 +125,8 @@ body {
 	height: auto !important;
 }
 
+.delete-confirmation form .cancel-link {
+	height: auto !important;
+}
+
 /* ######################### End of bunch of Admin UI fixes ######################### */
