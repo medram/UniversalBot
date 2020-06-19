@@ -71,8 +71,8 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	fields = ('task_name', 'run_at', 'repeat', 'repeat_until', 'lists', 'servers')
 	filter_horizontal = ('lists', 'servers')
 
-	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'total_profiles', 
-		'created', 'get_queue_status', 'show_progress', 'queue_status')
+	list_display = ('id', 'task_name', 'run_at', 'repeat', 'repeat_until', 'count_lists', 'total_profiles',
+		'created', 'get_queue_status', 'show_progress')
 	list_display_links = ('task_name',)
 	list_per_page = 25
 	list_filter = ('created', 'repeat', 'queue_status')
@@ -87,7 +87,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 			except ZeroDivisionError:
 				progress = 0
 			return f'{progress:0.02f}% ({obj.qsize} in queue)'
-		
+
 		return '-'
 	show_progress.short_description = 'Progress (%)'
 
@@ -102,7 +102,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 		elif obj.queue_status == obj.QUEUE_STATUS.PROCESSING:
 			return mark_safe(f'<span class="badge badge-pill badge-warning">{obj.get_queue_status_display().upper()}...</span>')
 		return mark_safe(f'<span class="badge badge-pill badge-secondary">{obj.get_queue_status_display().upper()}</span>')
-	
+
 	get_queue_status.short_description = 'Queue status'
 
 
