@@ -5,7 +5,7 @@ import queue
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from .tasks_signals import task_started, task_finished, each_profile_start, each_profile_end
-from .models import TaskAdaptor
+from .models import TaskAdaptor, Deleted_queue
 
 from background_task import background
 from selenium.common.exceptions import WebDriverException
@@ -32,7 +32,3 @@ def run_lists(task_id):
 		print(f'-> The Task ({task_id}) is pushed to Pools.')
 
 	print('Done!')
-
-	# task_finished.send(TaskAdaptor, task=task)
-
-

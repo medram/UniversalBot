@@ -155,3 +155,8 @@ class Server(models.Model):
 class ATM(models.Model):
 	""" Hhhhh, not the ATM you know, it's ApprovedTaskManagerModel """
 	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)
+
+
+class Deleted_queue(models.Model):
+	""" Queues to be deleted by ApprovedTaskManagerModel """
+	task = models.ForeignKey('TaskAdaptor', on_delete=models.CASCADE)

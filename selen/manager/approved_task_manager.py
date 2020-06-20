@@ -2,7 +2,7 @@ import time
 import threading
 
 from selen import app_settings
-from universalbot.models import ATM, TaskAdaptor
+from universalbot.models import ATM, TaskAdaptor, Deleted_queue
 
 from selen.common import Singleton
 from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start, 
@@ -100,7 +100,7 @@ class _ApprovedTaskManager:
 						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
 					)
 				
-				# try to update task_adapter if exists
+				# try to update task_adaptor if exists
 				try:
 					task_adaptor = self._get_taskAdaptor(task_id)
 					task_adaptor.total_qsize = len(self._lists[task_id][1])
@@ -112,11 +112,15 @@ class _ApprovedTaskManager:
 
 		print(f'refresh_list: ({len(self._lists)} subtasks lists in list)')
 
+		# report queues/lists to be deleted
+		for task_adaptor in ( dq.task for dq in Deleted_queue.objects.all() ):
+			self.clear_list(task_adaptor)
+
 		task_ids_to_delete = []
-		# delete the list  if the task list is empty. 
+		# delete the list  if the task list is empty.
 		for task_id, value in self._lists.items():
 			if len(value[1]) == 0:
-				print(f'===> deleting {task_id}')
+				print(f'===> deleting task_adaptor\'s list {task_id}')
 				task_ids_to_delete.append(task_id)
 
 		#fire a signal
@@ -153,7 +157,7 @@ class _ApprovedTaskManager:
 
 	def unregister(self, task):
 		try:
-			self._atm.objects.get(task=task).delete()
+			self._atm.objects.filter(task=task).delete()
 		except self._atm.DoesNotExist:
 			pass
 
@@ -178,20 +182,54 @@ class _ApprovedTaskManager:
 
 
 	@staticmethod
-	def report_taskAdapter_as_completed(task_adapter):
+	def report_taskAdapter_as_completed(task_adaptor):
 		# task is a task adapter
 		try:
-			task_adapter.queue_status = task_adapter.QUEUE_STATUS.COMPLETED
-			task_adapter.save()
+			task_adaptor.queue_status = task_adaptor.QUEUE_STATUS.COMPLETED
+			task_adaptor.save()
 		except Exception:
 			pass
 
 	@staticmethod
-	def report_taskAdapter_as_not_completed(task_adapter):
+	def report_taskAdapter_as_not_completed(task_adaptor):
 		# task is a task adapter
 		try:
-			task_adapter.queue_status = task_adapter.QUEUE_STATUS.PROCESSING
-			task_adapter.save()
+			task_adaptor.queue_status = task_adaptor.QUEUE_STATUS.PROCESSING
+			task_adaptor.save()
+		except Exception:
+			pass
+
+
+
+	@staticmethod
+	def register_queue_deletion(task_adaptor):
+		Deleted_queue.objects.create(task=task_adaptor)
+
+
+	@staticmethod
+	def unregister_queue_deletion(task_adaptor):
+		try:
+			Deleted_queue.objects.filter(task=task_adaptor).delete()
+		except Exception:
+			pass
+
+	def clear_list(self, task_adaptor):
+		try:
+			# self._lists[str(task_adaptor.id)][1].clear(s)
+
+			del self._lists[str(task_adaptor.id)] # task_id is a string
+
+			# unregister a TaskAdaptor from a database.
+			self.unregister(task_adaptor)
+
+
+			# refresh task_adaptor info
+			task_adaptor.qsize = 0
+			task_adaptor.total_qsize = 0
+			task_adaptor.queue_status = task_adaptor.QUEUE_STATUS.EMPTY
+			task_adaptor.save()
+			# delete Deleted_queue registration
+			self.unregister_queue_deletion(task_adaptor)
 		except Exception:
 			pass
 

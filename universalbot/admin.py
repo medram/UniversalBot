@@ -1,15 +1,14 @@
 from django.contrib import admin, messages
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import mark_safe
 from background_task.models import Task, CompletedTask
-
+from selen.manager import ApprovedTaskManager
 
 from .models import List, Profile, Proxy, TaskAdaptor, Server, ATM
 
-APP_NAME = 'Universal Bot'
-
-admin.site.site_title = f'{APP_NAME} v0.1.0'
-admin.site.site_header = f'{APP_NAME} v0.1.0'
+admin.site.site_title = f'{settings.APP_NAME}'
+admin.site.site_header = f'{settings.APP_NAME}'
 admin.site.index_title = 'Dashboard'
 
 
@@ -65,6 +64,18 @@ class ListAdmin(admin.ModelAdmin):
 	show_actions.short_description = 'Actions'
 
 
+############## Actions ##############
+def clear_queue(modeladmin, request, queryset):
+	task_adapters = queryset.all()
+	try:
+		for task_adapter in task_adapters:
+			ApprovedTaskManager.register_queue_deletion(task_adapter)
+	except Exception:
+		modeladmin.message_user(request, f'Oops! something went wrong.', messages.ERROR)
+	else:
+		modeladmin.message_user(request, f'Selected Task Queues are cleared successfully.', messages.SUCCESS)
+clear_queue.short_description = 'Clear Task Queue'
+
 
 @admin.register(TaskAdaptor)
 class TaskAdaptorAdmin(admin.ModelAdmin):
@@ -77,11 +88,12 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	list_per_page = 25
 	list_filter = ('created', 'repeat', 'queue_status')
 	search_fields = ('id', 'task_name')
+	actions = (clear_queue,)
 
 	def show_progress(self, obj):
 
 		# all_profiles = sum([ l.profiles.filter(status=True).count() for l in obj.lists.all() ])
-		if obj.queue_status == obj.QUEUE_STATUS.PROCESSING:
+		if obj.queue_status == obj.QUEUE_STATUS.PROCESSING and obj.total_qsize:
 			try:
 				progress = round((obj.total_qsize - obj.qsize) / obj.total_qsize * 100, 2)
 			except ZeroDivisionError:
