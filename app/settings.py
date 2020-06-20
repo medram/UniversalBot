@@ -146,3 +146,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 ####################### My custom settings #######################
 APP_NAME = 'UniversalBot'
 APP_VERSION = '1.0.0'
+POWRED_BY = 'Mohammed Ramouchy'

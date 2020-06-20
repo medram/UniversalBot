@@ -18,7 +18,10 @@
 {% endblock %}
 
 {% block footer %}
-	<div style="color: #555; text-align: center; margin-top: 50px; padding: 15px;">&copy; 2020 {% get_setting 'APP_NAME' default='Logo' %} (v{% get_setting 'APP_VERSION' %})</div>
+	<div style="color: #555" class="my-5 py-3 text-center">
+        &copy; 2020 {% get_setting 'APP_NAME' default='Logo' %} (v{% get_setting 'APP_VERSION' %})<br>
+        Powred By <a href="https://ramouchy.com" target="_blank" style="text-decoration: underline">{% get_setting 'POWRED_BY' %}</a>
+    </div>
     <!-- JavaScript -->
     <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
