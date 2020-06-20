@@ -58,14 +58,21 @@ class _PoolsManager:
 				self._pools[server] = p
 				self._queues[server] = q
 
+		pools_to_delete_by_keys = []
+
 		for s, p in self._pools.items():
 			if s not in servers:
 				# delete pool and queue for s
-				try:
-					del self._pools[s]
-					del self._queues[s]
-				except KeyError:
-					pass
+					pools_to_delete_by_keys.append(s)
+
+		# Delete pools
+		for s in pools_to_delete_by_keys:
+			try:
+				del self._pools[s]
+				del self._queues[s]
+			except KeyError:
+				pass
+
 
 		# Update pools threads (remove or create more)
 		for s in servers:

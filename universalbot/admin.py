@@ -74,7 +74,7 @@ def clear_queue(modeladmin, request, queryset):
 		modeladmin.message_user(request, f'Oops! something went wrong.', messages.ERROR)
 	else:
 		modeladmin.message_user(request, f'Selected Task Queues are cleared successfully.', messages.SUCCESS)
-clear_queue.short_description = 'Clear Task Queue'
+clear_queue.short_description = 'Clear Task Queues'
 
 
 @admin.register(TaskAdaptor)
