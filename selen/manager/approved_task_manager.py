@@ -3,16 +3,18 @@ import threading
 
 from selen import app_settings
 from universalbot.models import ATM, TaskAdaptor, Deleted_queue
+from selenium.common.exceptions import WebDriverException
 
 from selen.common import Singleton
+from selen.ISP.hotmail import Hotmail
 from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start, 
 		each_profile_end, on_approved_task_manager_refresh_list)
 
 
 def run_profile(profile, l, task):
-	time.sleep(2)
-	print('run_profile is processed')
-	return None
+	# time.sleep(2)
+	# print('run_profile is processed')
+	# return None
 	""" This funtion execute profile actions using thread pool. """
 	each_profile_start.send(profile.__class__, profile=profile, list_=l, task=task)
 	try:
