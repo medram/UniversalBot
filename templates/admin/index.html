@@ -1,0 +1,81 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block coltype %}row" style="width: auto; margin-right: 0px;{% endblock %}
+
+{% block content_title %}
+	<div style="width: -webkit-fill-available;">
+		<div class="col-md-12">{{ block.super }}</div>
+	</div>
+{% endblock%}
+
+{% block content %}
+	<div class="col-md-4">
+		{{ block.super|escape }}
+	</div>
+	<style>
+		.insight {
+			display: flex;
+		    flex-wrap: wrap;
+    		justify-content: left;
+    		align-items: stretch;
+		}
+		
+		.insight > .card {
+			min-width: 20rem;
+		    margin-right: 0.5rem;
+    		margin-left: 0.5rem;
+    		flex-grow: 1;
+		}
+	</style>
+	<div class="col-md-8 insight">
+		
+		<div class="card text-white bg-success mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-users"></i> Profiles<br></div>
+		  <div class="card-body display-4 text-center">
+		    5487
+		  </div>
+		</div>
+
+		<div class="card text-white bg-dark mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-desktop"></i> Servers<br></div>
+		  <div class="card-body display-4 text-center">
+		    3
+		  </div>
+		</div>
+
+		<div class="card text-white bg-secondary mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-server"></i> Proxies<br></div>
+		  <div class="card-body display-4 text-center">
+		    45
+		  </div>
+		</div>
+
+		<div class="card text-white bg-info mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-tasks"></i> Tasks<br></div>
+		  <div class="card-body display-4 text-center">
+		    18
+		  </div>
+		</div>
+
+		<div class="card text-dark bg-light mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-stream"></i> Queues<br></div>
+		  <div class="card-body display-4 text-center">
+		    5
+		  </div>
+		</div>
+
+		<div class="card text-white bg-warning mb-3">
+		  <div class="card-header display-4"><i class="fas fa-fw fa-robot"></i> Workers<br></div>
+		  <div class="card-body display-4 text-center">
+		    5
+		  </div>
+		</div>
+
+	</div>
+{% endblock %}
+
+
+{% block sidebar %}
+
+{% endblock %}
