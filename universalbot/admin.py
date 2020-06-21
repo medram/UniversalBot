@@ -7,10 +7,10 @@ from selen.manager import ApprovedTaskManager
 
 from .models import List, Profile, Proxy, TaskAdaptor, Server, ATM
 
+
 admin.site.site_title = f'{settings.APP_NAME}'
 admin.site.site_header = f'{settings.APP_NAME}'
 admin.site.index_title = 'Dashboard'
-
 
 admin.site.unregister(Task)
 admin.site.unregister(CompletedTask)
