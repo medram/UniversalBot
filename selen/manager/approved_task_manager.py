@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 
 from selen.common import Singleton
 from selen.ISP.hotmail import Hotmail
-from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start, 
+from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start,
 		each_profile_end, on_approved_task_manager_refresh_list)
 
 
@@ -62,7 +62,7 @@ class _ApprovedTaskManager:
 
 	def __init__(self):
 		# list of TaskAdapters
-		self.tasks = self._load_tasks()
+		self.tasks = []
 		self._lists = {}
 
 		# self._lists = {
@@ -101,7 +101,7 @@ class _ApprovedTaskManager:
 						[ s for s in task.servers.all() ],
 						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
 					)
-				
+
 				# try to update task_adaptor if exists
 				try:
 					task_adaptor = self._get_taskAdaptor(task_id)
