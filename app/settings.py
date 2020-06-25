@@ -149,5 +149,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 APP_NAME = 'UniversalBot'
 APP_VERSION = '1.0.0'
 POWRED_BY = 'Mohammed Ramouchy'
-POWRED_BY_URL = 'https://ramouchy.com'
+POWRED_BY_URL = 'https://github.com/medram'
 POWRED_BY_EMAIL = 'mohammed@ramouchy.com'
