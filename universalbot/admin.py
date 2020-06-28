@@ -98,7 +98,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 				progress = round((obj.total_qsize - obj.qsize) / obj.total_qsize * 100, 2)
 			except ZeroDivisionError:
 				progress = 0
-			return f'{progress:0.02f}% ({obj.qsize} in queue)'
+			return mark_safe(f'<small>{progress:0.02f}% ({obj.qsize} in queue)</small>')
 
 		return '-'
 	show_progress.short_description = 'Progress (%)'
