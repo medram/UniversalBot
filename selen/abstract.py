@@ -1,12 +1,12 @@
 import abc
 import random
-
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.proxy import Proxy, ProxyType
 
-from .utils import MyListeners
+# from .utils import MyListeners
+from . import common
 from universalbot import models
 
 
@@ -19,6 +19,7 @@ class AbstractISP(abc.ABC):
 		self.driver = self.driver_factory()
 		self.loggedin = False
 		self.actions = {}
+		self.is_created_profile_used = False
 		self.register_actions()
 
 	def driver_factory(self):
@@ -27,10 +28,10 @@ class AbstractISP(abc.ABC):
 		# # choose a random server from taskAdapter
 		# server = random.choice(servers)
 		driver = webdriver.Remote(
-					# browser_profile=,
-		   			command_executor=f'http://{self.server.ip}:{self.server.port}/wd/hub',
-		   			desired_capabilities=self.get_capabilities()
-		   		)
+					browser_profile=self.profile_factory(),
+					command_executor=f'http://{self.server.ip}:{self.server.port}/wd/hub',
+					desired_capabilities=self.get_capabilities()
+				)
 
 		# driver = EventFiringWebDriver(driver, MyListeners())
 		driver.implicitly_wait(10)
@@ -72,6 +73,32 @@ class AbstractISP(abc.ABC):
 		return capabilities
 
 
+	def get_profile_path(self):
+		username = self.profile.email.split('@')[0]
+		
+		for profile_path in common.get_profiles_paths():
+			if profile_path.endswith(username):
+				return profile_path
+		return None
+
+
+	def profile_factory(self):
+		profile_path = self.get_profile_path()
+		self.is_created_profile_used = False
+		
+		if profile_path:
+			# return a profile a FireFox profile from this PC
+			try:
+				fp = webdriver.FirefoxProfile(profile_path)
+				self.is_created_profile_used = True
+				return fp
+			except Exception:
+				pass
+		# else return a new FireFox profile (by return None)
+		return None
+
+
+
 	@abc.abstractmethod
 	def login(self):
 		pass
@@ -97,6 +124,7 @@ class ActionAbstract(abc.ABC):
 	@abc.abstractmethod
 	def apply(self):
 		pass
+
 
 
 class ISP_Factory():

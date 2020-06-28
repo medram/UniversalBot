@@ -1,2 +1,3 @@
-# https://account.live.com/identity/confirm
-# https://account.live.com/recover
+import os
+
+FIREFOX_PROFILES_PATH = r'C:\Users\%s\AppData\Roaming\Mozilla\Firefox\Profiles' % os.getlogin()

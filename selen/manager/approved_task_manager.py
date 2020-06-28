@@ -22,8 +22,6 @@ def run_profile(profile, l, task, server):
 		isp.login()
 		isp.do_actions()
 		isp.quit()
-		print(f'profile {profile.pk}...')
-		# time.sleep(5)
 
 	except WebDriverException as e:
 		if 'Message: Reached error page' in str(e):
