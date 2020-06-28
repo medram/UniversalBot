@@ -37,8 +37,8 @@ class AbstractISP(abc.ABC):
 		return driver
 
 	def get_capabilities(self):
-		# capabilities = DesiredCapabilities.FIREFOX.copy()
-		capabilities = DesiredCapabilities.CHROME.copy()
+		capabilities = DesiredCapabilities.FIREFOX.copy()
+		# capabilities = DesiredCapabilities.CHROME.copy()
 		# print('get_capabilities')
 		proxy = self.profile.proxy
 
