@@ -11,22 +11,24 @@ from universalbot import models
 
 
 class AbstractISP(abc.ABC):
-	def __init__(self, profile, list_, task):
+	def __init__(self, profile, list_, task, server):
 		self.profile = profile
 		self.list = list_
 		self.task = task
+		self.server = server
 		self.driver = self.driver_factory()
 		self.loggedin = False
 		self.actions = {}
 		self.register_actions()
 
 	def driver_factory(self):
-		# get active servers.
-		servers = [ s for s in self.task.servers.all() if s.active ]
-		# choose a random server from taskAdapter
-		server = random.choice(servers)
+		# # get active servers.
+		# servers = [ s for s in self.task.servers.all() if s.active ]
+		# # choose a random server from taskAdapter
+		# server = random.choice(servers)
 		driver = webdriver.Remote(
-		   			command_executor=f'http://{server.ip}:{server.port}/wd/hub',
+					# browser_profile=,
+		   			command_executor=f'http://{self.server.ip}:{self.server.port}/wd/hub',
 		   			desired_capabilities=self.get_capabilities()
 		   		)
 
@@ -35,7 +37,8 @@ class AbstractISP(abc.ABC):
 		return driver
 
 	def get_capabilities(self):
-		capabilities = DesiredCapabilities.FIREFOX.copy()
+		# capabilities = DesiredCapabilities.FIREFOX.copy()
+		capabilities = DesiredCapabilities.CHROME.copy()
 		# print('get_capabilities')
 		proxy = self.profile.proxy
 
@@ -94,3 +97,18 @@ class ActionAbstract(abc.ABC):
 	@abc.abstractmethod
 	def apply(self):
 		pass
+
+
+class ISP_Factory():
+	@staticmethod
+	def get_isp(profile, l, task, server):
+		# avoiding circular import.
+		from selen.ISP.hotmail import Hotmail
+		from selen.ISP.gmail import Gmail
+
+		email = profile.email.lower()
+		if email.endswith('@hotmail.com') or email.endswith('@outlook.com'): 
+			return Hotmail(profile, l, task, server)
+
+		if email.endswith('@gmail.com'):
+			return Gmail(profile, l, task, server)

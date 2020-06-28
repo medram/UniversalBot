@@ -6,19 +6,19 @@ from universalbot.models import ATM, TaskAdaptor, Deleted_queue
 from selenium.common.exceptions import WebDriverException
 
 from selen.common import Singleton
-from selen.ISP.hotmail import Hotmail
+from selen.abstract import ISP_Factory
 from universalbot.tasks_signals import ( task_started, task_finished, each_profile_start,
 		each_profile_end, on_approved_task_manager_refresh_list)
 
 
-def run_profile(profile, l, task):
+def run_profile(profile, l, task, server):
 	# time.sleep(2)
 	# print('run_profile is processed')
 	# return None
 	""" This funtion execute profile actions using thread pool. """
 	each_profile_start.send(profile.__class__, profile=profile, list_=l, task=task)
 	try:
-		isp = Hotmail(profile, l, task)
+		isp = ISP_Factory.get_isp(profile, l, task, server)
 		isp.login()
 		isp.do_actions()
 		isp.quit()
@@ -99,7 +99,7 @@ class _ApprovedTaskManager:
 			if task_id not in self._lists:
 				self._lists[task_id] = (
 						[ s for s in task.servers.all() ],
-						[ (run_profile, (p, l, task), {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
+						[ (run_profile, [p, l, task], {}) for l in task.lists.all() for p in l.profiles.filter(status=True).all() ]
 					)
 
 				# try to update task_adaptor if exists
