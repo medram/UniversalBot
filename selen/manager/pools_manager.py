@@ -89,8 +89,8 @@ class _PoolsManager:
 	def get_pools_needs(self):
 		needs = {}
 		for s, q in self._queues.items():
-			if q.qsize() <= s.capacity * 2:
-				needs[s] = s.capacity * 2 - q.qsize()
+			if q.qsize() <= s.capacity + 1:
+				needs[s] = s.capacity + 1 - q.qsize()
 		print(f'get_pools_needs: {needs}')
 		return needs
 
@@ -101,6 +101,9 @@ class _PoolsManager:
 		print('push_subtasks to pools queues')
 		for server, sub_tasks in subtasks.items():
 			for subtask in sub_tasks:
+				# Set the server to work with.
+				subtask[1].append(server)
+				# push the sebstask to pools queue of the server
 				self._queues[server].put(subtask)
 
 

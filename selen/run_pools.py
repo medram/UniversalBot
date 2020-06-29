@@ -71,6 +71,8 @@ def main():
 
     except (KeyboardInterrupt, SystemExit):
         t.abort()
+    except:
+        t.abort() # abort as well
 
     print('Done.')
 

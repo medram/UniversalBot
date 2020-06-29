@@ -63,6 +63,13 @@ def screen_is_loaded(driver, timeout=60):
 	yield wait.until_not(EC.presence_of_element_located((By.CSS_SELECTOR, 'div#loadingScreen')))
 
 
+@contextlib.contextmanager
+def page_is_loaded(driver, ec, timeout=60):
+	# print('is screen loaded ?!')
+	wait = WebDriverWait(driver, timeout=timeout, ignored_exceptions=(TimeoutException,))
+	yield wait.until(ec)
+
+
 def select_all_msgs(driver):
 	driver.execute_script("""
 		let messages = Object.values(document.querySelectorAll('div[role=checkbox]'))
