@@ -55,6 +55,6 @@ class Inbox_archive_all(ActionAbstract):
 				element = (By.CSS_SELECTOR, 'div.vh > span.aT')
 				if wait.until(EC.presence_of_element_located(element)) \
 				   and wait.until_not(EC.presence_of_element_located(element)):
-					time.sleep(3)
+					time.sleep(10)
 			except TimeoutException as e:
 				print(f'{self.__class__.__name__} not granted')
