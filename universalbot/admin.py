@@ -154,9 +154,9 @@ class ProxyAdmin(admin.ModelAdmin):
 
 @admin.register(Server)
 class ServerAdmin(admin.ModelAdmin):
-	list_display = ('ip', 'port', 'capacity','active', 'created')
+	list_display = ('ip', 'port', 'name', 'capacity','active', 'created')
 	list_per_page = 25
-	search_fields = ('ip', 'port')
+	search_fields = ('name', 'ip', 'port')
 	list_filter = ('created', 'active')
 	actions = (activate_all_ips, deactivate_all_ips)
 

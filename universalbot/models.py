@@ -105,7 +105,7 @@ class TaskAdaptor(models.Model):
 	class QUEUE_STATUS(models.IntegerChoices):
 		PROCESSING 	= (0, 'Processing')
 		COMPLETED 	= (1, 'Completed')
-		EMPTY		= (2, 'Empty') 
+		EMPTY		= (2, 'Empty')
 
 
 	task_name = models.CharField(max_length=255, null=True, unique=True)
@@ -137,6 +137,7 @@ class TaskAdaptor(models.Model):
 
 
 class Server(models.Model):
+	name = models.CharField(max_length=32, verbose_name='Server name', null=True, blank=True)
 	ip = models.GenericIPAddressField(verbose_name='IP Address')
 	port = models.PositiveIntegerField(validators=[MaxValueValidator(65535), MinValueValidator(1)])
 	active = models.BooleanField(default=True, help_text='Active means that the server is up and running and is ready to use.')
