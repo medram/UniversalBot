@@ -89,6 +89,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	list_filter = ('created', 'repeat', 'queue_status')
 	search_fields = ('id', 'task_name')
 	actions = (clear_queue,)
+	date_hierarchy = 'created'
 
 	def show_progress(self, obj):
 
