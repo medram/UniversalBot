@@ -30,7 +30,7 @@ class AbstractISP(abc.ABC):
 		driver = webdriver.Remote(
 					browser_profile=self.profile_factory(),
 					command_executor=f'http://{self.server.ip}:{self.server.port}/wd/hub',
-					desired_capabilities=self.get_capabilities()
+					desired_capabilities=(None if self.is_created_profile_used else self.get_capabilities())
 				)
 
 		# driver = EventFiringWebDriver(driver, MyListeners())
@@ -66,7 +66,7 @@ class AbstractISP(abc.ABC):
 				prox.socks_proxy = f'{proxy.ip}:{proxy.port}'
 				prox.socks_username = proxy.username
 				prox.socks_password = proxy.password
-		
+
 			prox.add_to_capabilities(capabilities)
 
 		# print(capabilities)
@@ -75,7 +75,7 @@ class AbstractISP(abc.ABC):
 
 	def get_profile_path(self):
 		username = self.profile.email.split('@')[0]
-		
+
 		for profile_path in common.get_profiles_paths():
 			if profile_path.endswith(username):
 				return profile_path
@@ -85,7 +85,7 @@ class AbstractISP(abc.ABC):
 	def profile_factory(self):
 		profile_path = self.get_profile_path()
 		self.is_created_profile_used = False
-		
+
 		if profile_path:
 			# return a profile a FireFox profile from this PC
 			try:
@@ -135,7 +135,7 @@ class ISP_Factory():
 		from selen.ISP.gmail import Gmail
 
 		email = profile.email.lower()
-		if email.endswith('@hotmail.com') or email.endswith('@outlook.com'): 
+		if email.endswith('@hotmail.com') or email.endswith('@outlook.com'):
 			return Hotmail(profile, l, task, server)
 
 		if email.endswith('@gmail.com'):
