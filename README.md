@@ -27,20 +27,19 @@ Any ideas or suggestions, I'm all ears.
 
 ![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/1.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/2.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/2.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/3.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/3.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/4.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/4.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/5.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/5.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/6.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/6.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/7.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/7.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/8.png)
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/8.png)
 
-![](https://raw.githubusercontent.com/medram/3Din2DCanvas/master/wiki/imgs/9.png)
-
+![](https://raw.githubusercontent.com/medram/UniversalBot/master/wiki/imgs/9.png)
 
