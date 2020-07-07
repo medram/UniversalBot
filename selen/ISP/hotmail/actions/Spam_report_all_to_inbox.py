@@ -37,7 +37,9 @@ class Spam_report_all_to_inbox(ActionAbstract):
 				try:
 					not_junk_button = driver.find_elements_by_css_selector('button.ms-Button.T-xELtdXJl3uwSp_eaCQ4')[1]
 					not_junk_button.click()
-					
+					# click to "Not junk" button.
+					actions.send_keys(Keys.ARROW_DOWN).send_keys(Keys.ENTER).perform()
+
 					time.sleep(1)
 					wait = WebDriverWait(driver, 15)
 					undo_notification = (By.CSS_SELECTOR, 'div#notificationBarText div')
@@ -45,6 +47,6 @@ class Spam_report_all_to_inbox(ActionAbstract):
 				 		and wait.until_not(EC.presence_of_element_located(undo_notification)):
 						# print('Confirm')
 						# wait to make sure the action is applied
-						time.sleep(3)
+						time.sleep(10)
 				except TimeoutException:
 					print(f'{self.__class__.__name__} not granted')
