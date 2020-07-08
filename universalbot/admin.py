@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import mark_safe
 from background_task.models import Task, CompletedTask
@@ -76,6 +77,14 @@ def clear_queue(modeladmin, request, queryset):
 		modeladmin.message_user(request, f'Selected Task Queues are cleared successfully.', messages.SUCCESS)
 clear_queue.short_description = 'Clear Task Queues'
 
+def start_task_adaptor_now(modeladmin, request, queryset):
+	queryset.update(run_at=timezone.now())
+	for task_adaptor in queryset.all():
+		task_adaptor.save()
+	modeladmin.message_user(request, f'The Selected Tasks are started successfully.', messages.SUCCESS)
+start_task_adaptor_now.short_description = f'Run selected {TaskAdaptor._meta.verbose_name_plural}'
+############## / Actions ##############
+
 
 @admin.register(TaskAdaptor)
 class TaskAdaptorAdmin(admin.ModelAdmin):
@@ -88,7 +97,7 @@ class TaskAdaptorAdmin(admin.ModelAdmin):
 	list_per_page = 25
 	list_filter = ('created', 'repeat', 'queue_status')
 	search_fields = ('id', 'task_name')
-	actions = (clear_queue,)
+	actions = (clear_queue, start_task_adaptor_now)
 	date_hierarchy = 'created'
 
 	def show_progress(self, obj):
