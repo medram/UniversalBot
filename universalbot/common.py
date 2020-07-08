@@ -28,20 +28,22 @@ def create_profiles_from_list(l):
 							profile = Profile.objects.create(email=line['email'], password=line.get('password', None), status=True)
 						l.profiles.add(profile)
 
-						# assign proxy to its profile. 
+						# assign proxy to its profile.
 						try:
 							ip, port, *_ = line['proxy'].split(':')
 							port = int(port)
-						
+
 							validate_ipv4_address(ip)
 							if port < 1 or port > 65535:
 								raise ValidationError('Invalid port number')
-							
+
 							try:
 								p = Proxy.objects.get(ip=ip, port=port)
 							except Proxy.DoesNotExist:
 								p = Proxy.objects.create(ip=ip, port=port)
-							
+							except Proxy.MultipleObjectsReturned:
+								p = Proxy.objects.filter(ip=ip, port=port).first()
+
 							profile.proxy = p
 							profile.save()
 						except (ValidationError, KeyError, ValueError) as e:
