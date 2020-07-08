@@ -33,9 +33,9 @@ deactivate_all_profiles.short_description = 'Deactivate'
 class ProfileAdmin(admin.ModelAdmin):
 	list_display = ('id', 'email', 'status', 'updated', 'created')
 	list_display_links = ('id', 'email')
-	list_per_page = 25
+	list_per_page = 50
 	# list_editable = ('status',)
-	list_filter = ('status', 'created')
+	list_filter = ('status', 'created', 'list')
 	search_fields = ('email', 'id')
 	actions = (activate_all_profiles, deactivate_all_profiles)
 
