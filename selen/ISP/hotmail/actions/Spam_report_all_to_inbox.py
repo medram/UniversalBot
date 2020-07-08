@@ -23,7 +23,7 @@ class Spam_report_all_to_inbox(ActionAbstract):
 
 		with utils.document_completed(driver, 20):
 			# let javascript requests finish.
-			time.sleep(8)
+			time.sleep(5)
 
 			# Scroll down.
 			with utils.scroll_down(driver, 'div.customScrollBar.RKFl-TUsdXTE7ZZWxFGwX'):
