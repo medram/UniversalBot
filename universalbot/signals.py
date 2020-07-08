@@ -29,9 +29,9 @@ def create_task(sender, instance, created, **kwargs):
 		task = run_lists(
 					{
 						'task_id': instance.pk
-					}, 
+					},
 					schedule=instance.run_at,
-					repeat=instance.repeat, 
+					repeat=instance.repeat,
 					verbose_name=instance.task_name,
 					repeat_until=instance.repeat_until
 				)
@@ -41,14 +41,29 @@ def create_task(sender, instance, created, **kwargs):
 
 # Update the task automatically
 @receiver(post_save, sender=TaskAdaptor)
+@on_transaction_commit
 def save_task(sender, instance, created, **kwargs):
-	if not created and instance.task:
-		instance.task.run_at = instance.run_at
-		instance.task.verbose_name = instance.task_name
-		instance.task.repeat = instance.repeat
-		instance.task.repeat_until = instance.repeat_until
-		instance.task.save()
-
+	if not created:
+		if instance.task:
+			# update a task
+			instance.task.run_at = instance.run_at
+			instance.task.verbose_name = instance.task_name
+			instance.task.repeat = instance.repeat
+			instance.task.repeat_until = instance.repeat_until
+			instance.task.save()
+		else:
+			# Create a task
+			task = run_lists(
+						{
+							'task_id': instance.pk
+						},
+						schedule=instance.run_at,
+						repeat=instance.repeat,
+						verbose_name=instance.task_name,
+						repeat_until=instance.repeat_until
+					)
+			instance.task = task
+			instance.save()
 
 # Delete the task automatically
 @receiver(post_delete, sender=TaskAdaptor)
