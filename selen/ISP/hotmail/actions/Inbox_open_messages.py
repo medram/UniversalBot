@@ -28,11 +28,11 @@ class Inbox_open_messages(ActionAbstract):
 		with utils.scroll_down(driver, 'div.customScrollBar.RKFl-TUsdXTE7ZZWxFGwX', poll_frequency=3):
 			time.sleep(1)
 			# select all msgs.
-			msgs = driver.find_elements_by_css_selector('div._1xP-XmXM1GGHpRKCCeOKjP') 
-			
+			msgs = driver.find_elements_by_css_selector('div._1xP-XmXM1GGHpRKCCeOKjP')
+
 			for i, msg in enumerate(msgs, 1):
 				# open just 60 messages.
-				if i > 60:
+				if i > random.randint(60, 120):
 					break
 				msg.click()
 				# print(msg)
