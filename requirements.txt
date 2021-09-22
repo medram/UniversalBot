@@ -9,7 +9,7 @@ click==7.1.1
 colorama==0.4.3
 decorator==4.4.2
 defusedxml==0.6.0
-Django==3.0.7
+Django==3.1.13
 django-background-tasks==1.2.5
 django-compat==1.0.15
 django-extra-settings==0.1.1
